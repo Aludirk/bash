@@ -24,7 +24,11 @@
 
 #!/usr/bin/env bash
 
-LIB_BASH_VERSION=0.0.1
+# Version
+LIB_BASH_VERSION=0.1.0
+
+# Save the IFS.
+LIB_BASH_ORIGINAL_IFS="${IFS}"
 
 ################################################################################
 # Set up the default library configuration.

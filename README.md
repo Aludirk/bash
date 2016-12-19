@@ -1,11 +1,20 @@
-# General library for Bash shell script (0.0.1)
+# General library for Bash shell script (0.1.0)
 
 A collection of handy functions for the shell script writing, it aims for Bash 3+.
 
+* [Modules](#modules)
 * [Configuration](#configuration)
   * [Debug mode](#debug-mode)
   * [Error message colors](#error-message-colors)
 * [Error codes](#error-codes)
+
+## Modules
+
+All modules are tested in macOS and linux.
+
+Module | Description
+----- | -----
+[Command](doc/command.md) | Command/Function utility.
 
 ## Configuration
 

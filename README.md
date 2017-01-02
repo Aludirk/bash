@@ -7,6 +7,7 @@ A collection of handy functions for the shell script writing, it aims for Bash 3
   * [Debug mode](#debug-mode)
   * [Error message colors](#error-message-colors)
 * [Error codes](#error-codes)
+* [Version History](#version-history)
 
 ## Modules
 
@@ -37,3 +38,9 @@ Code | Error
 3 | Invalid parameters.
 4 | Invalid options.
 5 | No outputs.
+
+## Version History
+
+### 0.1.0
+
+* Add `get_option` to simulate the built-in function `getopt`.

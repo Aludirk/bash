@@ -22,6 +22,7 @@ Command/Function utility.
 #
 # Returns:
 #   ${LIB_BASH_ERROR_INVALID_PARAM}
+#   ${LIB_BASH_ERROR_INVALID_OPTION}
 #   ${LIB_BASH_ERROR_NO_OUTPUT}
 #
 # `get_option` supports '--' for indicate the end of options and long option,

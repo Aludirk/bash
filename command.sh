@@ -42,6 +42,7 @@ popd &> /dev/null
 #
 # Returns:
 #   ${LIB_BASH_ERROR_INVALID_PARAM}
+#   ${LIB_BASH_ERROR_INVALID_OPTION}
 #   ${LIB_BASH_ERROR_NO_OUTPUT}
 #
 # `get_option` supports '--' for indicate the end of options and long option,
@@ -191,8 +192,8 @@ function get_option()
         break
       fi
 
-      # Skip the invalid option.
-      _lbgo_args=("${_lbgo_args[@]:1}")
+      error_code ${LIB_BASH_ERROR_INVALID_OPTION}
+      return ${?}
     else
       # Pop the processed arguments.
       _lbgo_args=("${_lbgo_args[@]:${_lbgo_shift_count}}")

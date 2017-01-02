@@ -54,21 +54,6 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
   assert_equal "${param[3]}" "p2"
 }
 
-@test "get_option - skip invalid options" {
-  local args=("-a" "-z" "--beta" "--option" "--data=ddd" "-cccc" "p1" "p2")
-  local options=()
-  local param=()
-
-  get_option "ab[beta]c:d[delta]:e:" args[@] options param
-  assert_equal ${#options[@]} 3
-  assert_equal "${options[0]}" "a:"
-  assert_equal "${options[1]}" "b:"
-  assert_equal "${options[2]}" "c:ccc"
-  assert_equal ${#param[@]} 2
-  assert_equal "${param[0]}" "p1"
-  assert_equal "${param[1]}" "p2"
-}
-
 @test "get_option - success" {
   local args=("-a" "--beta" "-c" "ccc" "--delta=ddd" "-eeee" "p1" "p2")
   local options=()
@@ -102,6 +87,15 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
   run get_option "a[_a]" args[@] options param
   assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
 
+}
+
+@test "get_option - invalid options" {
+  local args=("-a" "-z" "--beta" "--option" "--data=ddd" "-cccc" "p1" "p2")
+  local options=()
+  local param=()
+
+  run get_option "ab[beta]c:d[delta]:e:" args[@] options param
+  assert_failure ${LIB_BASH_ERROR_INVALID_OPTION}
 }
 
 @test "get_option - no outputs" {

@@ -1,4 +1,4 @@
-# General library for Bash shell script (0.1.0)
+# General library for Bash shell script (0.2.0)
 
 A collection of handy functions for the shell script writing, it aims for Bash 3+.
 
@@ -16,6 +16,7 @@ All modules are tested in macOS and linux.
 Module | Description
 ----- | -----
 [Command](doc/command.md) | Command/Function utility.
+[String](doc/string.md) | String manipulation.
 
 ## Configuration
 

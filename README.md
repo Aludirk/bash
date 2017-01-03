@@ -60,6 +60,16 @@ Code | Error
 
 ## Version History
 
+### 0.5.2
+
+* `implode_string` for imploding array to string and `explode_string` for exploding string to array.
+* `load_env_file` to read environment variables file.
+* Add `escape_string`.
+* Message module for printing colour string.
+* Fix skipping the unexpected options for `get_option`.
+* Fix `get_option` cannot handle special characters ‘“\$’.
+* Fix cannot print colour string.
+
 ### 0.1.0
 
 * Add `get_option` to simulate the built-in function `getopt`.

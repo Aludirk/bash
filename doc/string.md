@@ -64,11 +64,11 @@ printf "%s\n" "${result}"
 ################################################################################
 # Explode a string to array.
 #
-# Usage: explode_string <string> <dilimiter> <array_out>
+# Usage: explode_string <string> <delimiter> <array_out>
 #
 # Parameters:
 #   string    [in]  The string to explode.
-#   dilimiter [in]  The dilimiter list (for IFS (internal field separator) use).
+#   delimiter [in]  The delimiter list (for IFS (internal field separator) use).
 #   array_out [out] The exploded array.
 #
 # Returns:

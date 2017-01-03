@@ -120,7 +120,7 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result[2]}" 'C$C'
 }
 
-@test "explode_string - special characters in dilimiter" {
+@test "explode_string - special characters in delimiter" {
   local result
 
   explode_string 'Hello"World\!$!' '"\$' result
@@ -141,7 +141,7 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result[2]}" '"!!!"'
 }
 
-@test "explode_string - with dilimiter list" {
+@test "explode_string - with delimiter list" {
   local result
 
   explode_string "ABC,DEF GHI|JKL" ", |" result

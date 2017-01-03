@@ -26,6 +26,7 @@
 
 pushd $(dirname "${BASH_SOURCE[0]}") &> /dev/null
 source ".core.sh"
+source "command.sh"
 popd &> /dev/null
 
 ################################################################################
@@ -50,7 +51,7 @@ function implode_string()
   local _lbis_sep="${2}"
   local _lbis_array_out=${3}
 
-  if [[ ${#} -lt 2 ]] || [[ -z "${_lbis_sep}" ]]; then
+  if [[ ${#} -lt 2 ]]; then
     error_code ${LIB_BASH_ERROR_INVALID_PARAM}
     return ${?}
   fi
@@ -108,8 +109,72 @@ function explode_string()
   # Push all outputs to result array.
   local _lbes_value
   for _lbes_value in "${_lbes_tmp_array_out[@]}"; do
+    _lbes_value="$(printf "%s" "${_lbes_value}" | escape_system)"
     eval "${_lbes_array_out}+=(\"${_lbes_value}\")"
   done
+
+  return 0
+}
+
+################################################################################
+# Escape the string.
+#
+# Usage: escape_string [-e escape_list] <string> <escaped_string>
+#
+# Options:
+#   -s escape_list The character list for escaping, default is '"\$'.
+#
+# Parameters:
+#  string         [in]  The string to escape.
+#  escaped_string [out] The escaped string.
+#
+# Returns:
+#   ${LIB_BASH_ERROR_INVALID_PARAM}
+#   ${LIB_BASH_ERROR_INVALID_OPTION}
+#   ${LIB_BASH_ERROR_NO_OUTPUT}
+################################################################################
+function escape_string()
+{
+  local _lbes_args=("${@}")
+  local _lbes_options=()
+  local _lbes_params=()
+
+  get_option "e:" _lbes_args[@] _lbes_options _lbes_params
+  if [[ ${?} -ne 0 ]]; then
+    error_code ${LIB_BASH_ERROR_INVALID_OPTION}
+    return ${?}
+  fi
+
+  local _lbes_output=""
+  if [[ ${#_lbes_params[@]} -lt 1 ]]; then
+    error_code ${LIB_BASH_ERROR_INVALID_PARAM}
+    return ${?}
+  else
+    _lbes_output="${_lbes_params[0]}"
+  fi
+
+  local _lbes_escaped_string
+  if [[ ${#_lbes_params[@]} -lt 2 ]] || [[ -z "${_lbes_params[1]}" ]]; then
+    error_code ${LIB_BASH_ERROR_NO_OUTPUT}
+    return ${?}
+  else
+    _lbes_escaped_string=${_lbes_params[1]}
+  fi
+
+  local _lbes_escape_list='"$\'
+  local _lbes_option=""
+  for _lbes_option in "${_lbes_options[@]}"; do
+    local _lbes_opt=""
+    local _lbes_data=""
+
+    parse_option "${_lbes_option}" _lbes_opt _lbes_data
+    case "${_lbes_opt}" in
+      e) _lbes_escape_list="${_lbes_data}";;
+    esac
+  done
+
+  _lbes_output=$(printf "%s" "${_lbes_output}" | sed 's/\(['"${_lbes_escape_list}"']\)/\\\1/g')
+  eval "${_lbes_escaped_string}=\$(printf \"%s\" \"\${_lbes_output}\")"
 
   return 0
 }

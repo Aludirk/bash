@@ -128,6 +128,16 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
   assert_equal "${data}" "ccc"
 }
 
+@test "parse_option - special characters" {
+  local option='c:A"B\C$D'
+  local opt=""
+  local data=""
+
+  parse_option "${option}" opt data
+  assert_equal "${opt}" "c"
+  assert_equal "${data}" 'A"B\C$D'
+}
+
 @test "parse_option - success" {
   local option="c:ccc"
   local opt=""

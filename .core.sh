@@ -25,7 +25,7 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.3.2
+LIB_BASH_VERSION=0.4.0
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"
@@ -101,6 +101,13 @@ function error_code_func()
   return ${_lbecf_error_code}
 }
 
-# Set alias 'error_code' for handy use of 'error_code_func'
+################################################################################
+# Library aliases
+################################################################################
 shopt -s expand_aliases
+
+# Set alias 'error_code' for handy use of 'error_code_func'
 alias error_code='error_code_func "${BASH_SOURCE[0]}" ${LINENO}'
+
+# Set alias 'esacpe_system' for esacping the system characters '"\$'
+alias escape_system="sed 's/\\([\"\\\$]\\)/\\\\\\1/g'"

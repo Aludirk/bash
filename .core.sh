@@ -25,7 +25,7 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.4.1
+LIB_BASH_VERSION=0.5.0
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"
@@ -43,6 +43,12 @@ LIB_BASH_ERROR_FG=${LIB_BASH_ERROR_FG:-7}
 
 # The background color of error message, default is red.
 LIB_BASH_ERROR_BG=${LIB_BASH_ERROR_BG:-1}
+
+# The color of information message, default is green.
+LIB_BASH_INFO_COLOR=${LIB_BASH_INFO_COLOR:-2}
+
+# The color of question message, default is cyan.
+LIB_BASH_QUESTION_COLOR=${LIB_BASH_QUESTION_COLOR:-6}
 
 ################################################################################
 # Error codes.

@@ -24,7 +24,7 @@
 
 #!/usr/bin/env bash
 
-pushd $(dirname "${BASH_SOURCE[0]}") &> /dev/null
+pushd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null
 source ".core.sh"
 popd &> /dev/null
 
@@ -82,8 +82,9 @@ function get_option()
   fi
 
   # Validate the option string.
-  local _lbgo_match=$(perl -e \
-                      '"'"${_lbgo_option_string}"'" =~ m/^(?:'${_lbgo_opt_pattern}')+$/; print $&')
+  local _lbgo_match="$(perl -e \
+                       '"'"${_lbgo_option_string}"'" =~ m/^(?:'${_lbgo_opt_pattern}')+$/;
+                        print $&')"
   if [[ "${_lbgo_match}" != "${_lbgo_option_string}" ]]; then
     error_code ${LIB_BASH_ERROR_INVALID_PARAM}
     return ${?}
@@ -94,10 +95,10 @@ function get_option()
   eval "${_lbgo_param_out}=()"
 
   # Split the option string.
-  local _lbgo_option_strings=$(perl -e \
-                               '@res = "'"${_lbgo_option_string}"'" =~ m/'${_lbgo_opt_pattern}'/g;
-                                $,="\xff";
-                                print @res')
+  local _lbgo_option_strings="$(perl -e \
+                                '@res = "'"${_lbgo_option_string}"'" =~ m/'${_lbgo_opt_pattern}'/g;
+                                 $,="\xff";
+                                 print @res')"
   IFS=$'\xff'
   local _lbgo_option_strings=(${_lbgo_option_strings})
   IFS="${LIB_BASH_ORIGINAL_IFS}"
@@ -108,9 +109,9 @@ function get_option()
   local _lbgo_option=""
   for _lbgo_option in "${_lbgo_option_strings[@]}"; do
     _lbgo_option="$(printf "%s" "${_lbgo_option}" | escape_system)"
-    local _lbgo_option_seg=$(perl -e '@res = "'"${_lbgo_option}"'" =~ m/'${_lbgo_opt_capture}'/;
-                                      $,="\xff";
-                                      print @res')
+    local _lbgo_option_seg="$(perl -e '@res = "'"${_lbgo_option}"'" =~ m/'${_lbgo_opt_capture}'/;
+                                       $,="\xff";
+                                       print @res')"
     IFS=$'\xff'
     eval "local _lbgo_option${_lbgo_index}=(\${_lbgo_option_seg})"
     IFS="${LIB_BASH_ORIGINAL_IFS}"
@@ -161,24 +162,25 @@ function get_option()
           break
         else
           # Pattern: -odata
-          local _lbgo_match=$(perl -e '"'"${_lbgo_arg}"'" =~ m/^-'"${_lbgo_short}"'.+$/; print $&')
+          local _lbgo_match="$(perl -e \
+                               '"'"${_lbgo_arg}"'" =~ m/^-'"${_lbgo_short}"'.+$/; print $&')"
           if [[ -n "${_lbgo_match}" ]]; then
             _lbgo_shift_count=1
             _lbgo_option="${_lbgo_short}"
-            _lbgo_data=$(perl -e \
-                         '@res = "'"${_lbgo_arg}"'" =~ m/-'"${_lbgo_short}"'(.+)/; print @res')
+            _lbgo_data="$(perl -e \
+                          '@res = "'"${_lbgo_arg}"'" =~ m/-'"${_lbgo_short}"'(.+)/; print @res')"
             break
           fi
 
           # Pattern: --option=data
           if [[ -n "${_lbgo_long}" ]]; then
-            local _lbgo_match=$(perl -e \
-                                '"'"${_lbgo_arg}"'" =~ m/^--'"${_lbgo_long}"'=.*/; print $&')
+            local _lbgo_match="$(perl -e \
+                                 '"'"${_lbgo_arg}"'" =~ m/^--'"${_lbgo_long}"'=.*/; print $&')"
             if [[ -n "${_lbgo_match}" ]]; then
               _lbgo_shift_count=1
               _lbgo_option="${_lbgo_short}"
-              _lbgo_data=$(perl -e \
-                           '@res = "'"${_lbgo_arg}"'" =~ m/--'"${_lbgo_long}"'=(.*)/; print @res')
+              _lbgo_data="$(perl -e \
+                            '@res = "'"${_lbgo_arg}"'" =~ m/--'"${_lbgo_long}"'=(.*)/; print @res')"
               break
             fi
           fi
@@ -188,8 +190,9 @@ function get_option()
 
     if [[ ${_lbgo_shift_count} -eq 0 ]]; then
       # Check invalid option.
-      local _lbgo_match_short=$(perl -e '"'"${_lbgo_arg}"'" =~ m/^-[a-zA-Z]$/; print $&')
-      local _lbgo_match_long=$(perl -e '"'"${_lbgo_arg}"'" =~ m/^--[a-zA-Z][a-zA-Z_]+.*$/; print $&')
+      local _lbgo_match_short="$(perl -e '"'"${_lbgo_arg}"'" =~ m/^-[a-zA-Z]$/; print $&')"
+      local _lbgo_match_long="$(perl -e \
+                                '"'"${_lbgo_arg}"'" =~ m/^--[a-zA-Z][a-zA-Z_]+.*$/; print $&')"
       if [[ "${_lbgo_arg}" != "${_lbgo_match_short}" ]] \
       && [[ "${_lbgo_arg}" != "${_lbgo_match_long}" ]]; then
         break
@@ -247,7 +250,7 @@ function parse_option()
     return ${?}
   fi
 
-  eval "${_lbpo_option_out}=$(printf \"\${_lbpo_option_result:0:1}\")"
-  eval "${_lbpo_data_out}=$(printf \"\${_lbpo_option_result:2}\")"
+  eval "${_lbpo_option_out}=\"$(printf \"\${_lbpo_option_result:0:1}\")\""
+  eval "${_lbpo_data_out}=\"$(printf \"\${_lbpo_option_result:2}\")\""
   return 0
 }

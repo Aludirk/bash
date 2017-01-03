@@ -24,7 +24,7 @@
 
 #!/usr/bin/env bash
 
-pushd $(dirname "${BASH_SOURCE[0]}") &> /dev/null
+pushd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null
 source ".core.sh"
 source "command.sh"
 popd &> /dev/null
@@ -173,8 +173,8 @@ function escape_string()
     esac
   done
 
-  _lbes_output=$(printf "%s" "${_lbes_output}" | sed 's/\(['"${_lbes_escape_list}"']\)/\\\1/g')
-  eval "${_lbes_escaped_string}=\$(printf \"%s\" \"\${_lbes_output}\")"
+  _lbes_output="$(printf "%s" "${_lbes_output}" | sed 's/\(['"${_lbes_escape_list}"']\)/\\\1/g')"
+  eval "${_lbes_escaped_string}=\"\$(printf \"%s\" \"\${_lbes_output}\")\""
 
   return 0
 }

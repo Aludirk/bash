@@ -32,7 +32,7 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   local result
 
   implode_string array[@] $'\n' result
-  assert_equal "${result}" "$(printf "Hello\nWorld\n!!!")"
+  assert_equal "${result}" "$(printf "%b" "Hello\nWorld\n!!!")"
 }
 
 @test "implode_string - with nothing" {
@@ -40,7 +40,7 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   local result
 
   implode_string array[@] "" result
-  assert_equal "${result}" "$(printf "HelloWorld!!!")"
+  assert_equal "${result}" "$(printf "%b" "HelloWorld!!!")"
 }
 
 @test "implode_string - special characters" {

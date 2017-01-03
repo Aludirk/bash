@@ -6,43 +6,43 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test "message - simple default messge" {
   run message "Hello"
 
-  assert_output "$(printf "\e[0;30m%s\e[0m\n" "Hello")"
+  assert_output "$(printf "\e[0;30m%b\e[0m\n" "Hello")"
 }
 
 @test "message - special characters" {
   run message 'A"B\C$D'
 
-  assert_output "$(printf "\e[0;30m%s\e[0m\n" 'A"B\C$D')"
+  assert_output "$(printf "\e[0;30m%b\e[0m\n" 'A"B\C$D')"
 }
 
 @test "message - foreground color message" {
   run message -f ${COLOR_BLACK} "Hello\nBye"
 
-  assert_output "$(printf "\e[0;30m%s\e[0m\n" "Hello\nBye")"
+  assert_output "$(printf "\e[0;30m%b\e[0m\n" "Hello\nBye")"
 }
 
 @test "message - background color message" {
   run message -b ${COLOR_YELLOW} "Good Bye \"World\""
 
-  assert_output "$(printf "\e[0;30;43m%s\e[0m\n" 'Good Bye "World"')"
+  assert_output "$(printf "\e[0;30;43m%b\e[0m\n" 'Good Bye "World"')"
 }
 
 @test "message - bright text" {
   run message -f ${COLOR_WHITE} -t "Hello World"
 
-  assert_output "$(printf "\e[1;37m%s\e[0m\n" "Hello World")"
+  assert_output "$(printf "\e[1;37m%b\e[0m\n" "Hello World")"
 }
 
 @test "message - newline" {
   run message -n "Hello World"
 
-  assert_output "$(printf "\e[0;30m%s\e[0m" "Hello World")"
+  assert_output "$(printf "\e[0;30m%b\e[0m" "Hello World")"
 }
 
 @test "message - all options" {
   run message -t -f ${COLOR_BLUE} -b ${COLOR_MAGENTA} -n "TEST"
 
-  assert_output "$(printf "\e[1;34;45m%s\e[0m" "TEST")"
+  assert_output "$(printf "\e[1;34;45m%b\e[0m" "TEST")"
 }
 
 @test "message - success" {
@@ -66,20 +66,20 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test "info - normal" {
   run info "information"
 
-  assert_output "$(printf "\e[1;32m%s\e[0m\n" "information")"
+  assert_output "$(printf "\e[1;32m%b\e[0m\n" "information")"
 }
 
 @test "info - special characters" {
   run info 'A"B\C$D'
 
-  assert_output "$(printf "\e[1;32m%s\e[0m\n" 'A"B\C$D')"
+  assert_output "$(printf "\e[1;32m%b\e[0m\n" 'A"B\C$D')"
 }
 
 @test "info - alter color" {
   export LIB_BASH_INFO_COLOR=${COLOR_WHITE}
   run info "information"
 
-  assert_output "$(printf "\e[1;37m%s\e[0m\n" "information")"
+  assert_output "$(printf "\e[1;37m%b\e[0m\n" "information")"
   export LIB_BASH_INFO_COLOR=${COLOR_GREEN}
 }
 
@@ -98,13 +98,13 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test "error - normal" {
   run error "error msg" 2>&1
 
-  assert_output "$(printf "\e[1;37;41m%s\e[0m\n" "error msg")"
+  assert_output "$(printf "\e[1;37;41m%b\e[0m\n" "error msg")"
 }
 
 @test "error - special characters" {
   run error 'A"B\C$D'
 
-  assert_output "$(printf "\e[1;37;41m%s\e[0m\n" 'A"B\C$D')"
+  assert_output "$(printf "\e[1;37;41m%b\e[0m\n" 'A"B\C$D')"
 }
 
 @test "error - alter color" {
@@ -112,7 +112,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   export LIB_BASH_ERROR_BG=7
   run error "error msg" 2>&1
 
-  assert_output "$(printf "\e[1;30;47m%s\e[0m\n" "error msg")"
+  assert_output "$(printf "\e[1;30;47m%b\e[0m\n" "error msg")"
   export LIB_BASH_ERROR_FG=${COLOR_WHITE}
   export LIB_BASH_ERROR_BG=${COLOR_RED}
 }
@@ -136,7 +136,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   run question "Please give me the \"answer\": " answer < answer.txt
   popd &> /dev/null
 
-  assert_output "$(printf "\e[1;36m%s\e[0m" 'Please give me the "answer": ')"
+  assert_output "$(printf "\e[1;36m%b\e[0m" 'Please give me the "answer": ')"
 }
 
 @test "question - normal (answer)" {
@@ -156,7 +156,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   run question 'A"B\C$D' answer < answer.txt
   popd &> /dev/null
 
-  assert_output "$(printf "\e[1;36m%s\e[0m" 'A"B\C$D')"
+  assert_output "$(printf "\e[1;36m%b\e[0m" 'A"B\C$D')"
 }
 
 @test "question - special characters (answer)" {
@@ -177,7 +177,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   run question "Please give me the \"answer\": " answer < answer.txt
   popd &> /dev/null
 
-  assert_output "$(printf "\e[1;37m%s\e[0m" 'Please give me the "answer": ')"
+  assert_output "$(printf "\e[1;37m%b\e[0m" 'Please give me the "answer": ')"
   export LIB_BASH_QUESTION_COLOR=6
 }
 

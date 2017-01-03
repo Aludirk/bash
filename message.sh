@@ -108,7 +108,7 @@ function message()
   local _lbm_color_str=""
   implode_string _lbm_color[@] ";" _lbm_color_str
 
-  printf "\e[${_lbm_color_str}m%s\e[0m${_lbm_newline}" "${_lbm_params[0]}"
+  printf "\e[${_lbm_color_str}m%b\e[0m${_lbm_newline}" "${_lbm_params[0]}"
 
   return 0
 }

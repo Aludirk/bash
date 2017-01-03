@@ -1,4 +1,4 @@
-# General library for Bash shell script (0.5.2)
+# General library for Bash shell script (0.5.3)
 
 A collection of handy functions for the shell script writing, it aims for Bash 3+.
 
@@ -20,12 +20,12 @@ Some features are based on [Perl5](https://www.perl.org) to implement (use for [
 
 All modules are tested in macOS and linux.
 
-Module | Description
------ | -----
-[Command](doc/command.md) | Command/Function utility.
-[Environment File](doc/env.md) | Environment file reader.
-[Message](doc/message.md) | Show color message in shell.
-[String](doc/string.md) | String manipulation.
+Module | File | Description
+----- | ----- | -----
+[Command](doc/command.md) | [command.sh](command.sh) | Command/Function utility.
+[Environment File](doc/env.md) | [env.sh](env.sh) | Environment file reader.
+[Message](doc/message.md) | [message.sh](message.sh) | Show color message in shell.
+[String](doc/string.md) | [string.sh](string.sh) | String manipulation.
 
 ## Configuration
 

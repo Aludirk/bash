@@ -25,7 +25,7 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.5.2
+LIB_BASH_VERSION=0.5.3
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"

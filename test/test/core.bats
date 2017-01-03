@@ -23,7 +23,7 @@ teardown() {
 
   assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
   assert_output \
-    "$(printf "%s\n" "\e[1;37;41mInvalid parameters. (${BASH_SOURCE[0]}:${line_no})\e[0m")"
+    "$(printf "\e[1;37;41m%s\e[0m\n" "Invalid parameters. (${BASH_SOURCE[0]}:${line_no})")"
 }
 
 @test "error_code_func - invalid options" {
@@ -32,7 +32,7 @@ teardown() {
 
   assert_failure ${LIB_BASH_ERROR_INVALID_OPTION}
   assert_output \
-    "$(printf "%s\n" "\e[1;37;41mInvalid options. (${BASH_SOURCE[0]}:${line_no})\e[0m")"
+    "$(printf "\e[1;37;41m%s\e[0m\n" "Invalid options. (${BASH_SOURCE[0]}:${line_no})")"
 }
 
 @test "error_code_func - no outputs" {
@@ -41,7 +41,7 @@ teardown() {
 
   assert_failure ${LIB_BASH_ERROR_NO_OUTPUT}
   assert_output \
-    "$(printf "%s" "\e[1;37;41mNo outputs. (${BASH_SOURCE[0]}:${line_no})\e[0m")"
+    "$(printf "\e[1;37;41m%s\e[0m\n" "No outputs. (${BASH_SOURCE[0]}:${line_no})")"
 }
 
 @test "error_code_func - file does not exist" {
@@ -50,7 +50,7 @@ teardown() {
 
   assert_failure ${LIB_BASH_ERROR_FILE_NOT_EXIST}
   assert_output \
-    "$(printf "%s" "\e[1;37;41mFile does not exist. (${BASH_SOURCE[0]}:${line_no})\e[0m")"
+    "$(printf "\e[1;37;41m%s\e[0m\n" "File does not exist. (${BASH_SOURCE[0]}:${line_no})")"
 }
 
 @test "error_code_func - unknown error" {

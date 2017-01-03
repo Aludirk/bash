@@ -63,8 +63,8 @@ popd &> /dev/null
 ################################################################################
 function get_option()
 {
-  readonly local _lbgo_opt_pattern='[a-zA-Z](?:\[[a-zA-Z][a-zA-Z_]+\])?:?'
-  readonly local _lbgo_opt_capture='([a-zA-Z])(?:\[([a-zA-Z][a-zA-Z_]+)\])?(:)?'
+  local _lbgo_opt_pattern='[a-zA-Z](?:\[[a-zA-Z][a-zA-Z_]+\])?:?'
+  local _lbgo_opt_capture='([a-zA-Z])(?:\[([a-zA-Z][a-zA-Z_]+)\])?(:)?'
 
   local _lbgo_option_string="$(printf "%s" "${1}" | escape_system)"
   local _lbgo_args=("${!2}")

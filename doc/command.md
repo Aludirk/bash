@@ -70,7 +70,7 @@ done
 ```
 Output:
 ```bash
-$ ./argument.sh -a -beta -c ccc --delta=ddd -eee p1 p2
+$ ./argument.sh -a --beta -c ccc --delta=ddd -eee p1 p2
 Option:a Data:
 Option:b Data:
 Option:c Data:ccc

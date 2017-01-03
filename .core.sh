@@ -25,7 +25,7 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.5.1
+LIB_BASH_VERSION=0.5.2
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"
@@ -101,7 +101,7 @@ function error_code_func()
     esac
 
     _lbecf_err_msg="${_lbecf_err_msg} (${_lbecf_file_name}:${_lbecf_line_no})"
-    printf "%s\n" "\e[1;3${LIB_BASH_ERROR_FG};4${LIB_BASH_ERROR_BG}m${_lbecf_err_msg}\e[0m" 1>&2
+    printf "\e[1;3${LIB_BASH_ERROR_FG};4${LIB_BASH_ERROR_BG}m%s\e[0m\n" "${_lbecf_err_msg}" 1>&2
   fi
 
   return ${_lbecf_error_code}

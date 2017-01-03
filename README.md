@@ -1,7 +1,8 @@
-# General library for Bash shell script (0.5.0)
+# General library for Bash shell script (0.5.1)
 
 A collection of handy functions for the shell script writing, it aims for Bash 3+.
 
+* [Prerequisite](#prerequisite)
 * [Modules](#modules)
 * [Configuration](#configuration)
   * [Debug mode](#debug-mode)
@@ -10,6 +11,10 @@ A collection of handy functions for the shell script writing, it aims for Bash 3
   * [Question message color](#question-message-color)
 * [Error codes](#error-codes)
 * [Version History](#version-history)
+
+## Prerequisite
+
+Some features are based on [Perl5](https://www.perl.org) to implement (use for [PCRE](http://www.pcre.org/)).
 
 ## Modules
 

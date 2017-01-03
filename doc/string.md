@@ -4,6 +4,7 @@ String manipulation.
 
 * [implode_string](#implode_string)
 * [explode_string](#explode_string)
+* [escape_string](#escape_string)
 
 ## implode_string
 
@@ -102,5 +103,46 @@ printf "%s\n" "${result[3]}"
 # DEF
 # GHI
 # JKL
+###
+```
+
+## escape_string
+
+```
+################################################################################
+# Escape the string.
+#
+# Usage: escape_string [-e escape_list] <string> <escaped_string>
+#
+# Options:
+#   -s escape_list The character list for escaping, default is '"\$'.
+#
+# Parameters:
+#  string         [in]  The string to escape.
+#  escaped_string [out] The escaped string.
+#
+# Returns:
+#   ${LIB_BASH_ERROR_INVALID_PARAM}
+#   ${LIB_BASH_ERROR_INVALID_OPTION}
+#   ${LIB_BASH_ERROR_NO_OUTPUT}
+################################################################################
+```
+
+Examples:
+```bash
+escape_string 'ABC"DEF\GHI$JKL' result
+
+printf "%s\n" "${result}"
+###
+# ABC\"DEF\\GHI\$JKL
+###
+```
+
+```bash
+escape_string -e "&," 'ABC"D,F\G&I$JKL' result
+
+printf "%s\n" "${result}"
+###
+# ABC"D\,F\G\&I$JKL
 ###
 ```

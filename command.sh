@@ -128,9 +128,11 @@ function get_option()
       break
     fi
 
+    # Escape the argument.
+    local _lbgo_arg=$(printf "%s" "${_lbgo_args[0]}" | sed 's/\(["\$]\)/\\\1/g')
+
     local _lbgo_index=0
     for _lbgo_index in $(seq 1 ${_lbgo_option_count}); do
-      local _lbgo_arg="${_lbgo_args[0]}"
       eval "local _lbgo_short=\${_lbgo_option${_lbgo_index}[0]}"
       eval "local _lbgo_long=\${_lbgo_option${_lbgo_index}[1]}"
       eval "local _lbgo_have_data=\${_lbgo_option${_lbgo_index}[2]}"
@@ -187,8 +189,8 @@ function get_option()
       # Check invalid option.
       local _lbgo_match_short=$(perl -e '"'"${_lbgo_arg}"'" =~ m/^-[a-zA-Z]$/; print $&')
       local _lbgo_match_long=$(perl -e '"'"${_lbgo_arg}"'" =~ m/^--[a-zA-Z][a-zA-Z_]+.*$/; print $&')
-      if [[ "${_lbgo_arg}" != "${_lbgo_match_short}" ]] && \
-         [[ "${_lbgo_arg}" != "${_lbgo_match_long}" ]]; then
+      if [[ "${_lbgo_arg}" != "${_lbgo_match_short}" ]] \
+      && [[ "${_lbgo_arg}" != "${_lbgo_match_long}" ]]; then
         break
       fi
 
@@ -199,6 +201,7 @@ function get_option()
       _lbgo_args=("${_lbgo_args[@]:${_lbgo_shift_count}}")
 
       # Add option.
+      _lbgo_data=$(printf "%s" "${_lbgo_data}" | sed 's/\(["\$]\)/\\\1/g')
       eval "${_lbgo_option_out}+=(\"${_lbgo_option}:${_lbgo_data}\")"
     fi
   done
@@ -206,6 +209,7 @@ function get_option()
   # Store the parameters.
   local _lbgo_param=""
   for _lbgo_param in "${_lbgo_args[@]}"; do
+    _lbgo_param=$(printf "%s" "${_lbgo_param}" | sed 's/\(["\$]\)/\\\1/g')
     eval "${_lbgo_param_out}+=(\"${_lbgo_param}\")"
   done
 

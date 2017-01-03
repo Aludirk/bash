@@ -54,6 +54,18 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
   assert_equal "${param[3]}" "p2"
 }
 
+@test "get_option - special chcaracters" {
+  local args=("-a" 'ABC"DEF\GHI$JKL' 'JKL$GHI\DEF"ABC')
+  local options=()
+  local param=()
+
+  get_option "a:" args[@] options param
+  assert_equal ${#options[@]} 1
+  assert_equal "${options[0]}" 'a:ABC"DEF\GHI$JKL'
+  assert_equal ${#param[@]} 1
+  assert_equal "${param[0]}" 'JKL$GHI\DEF"ABC'
+}
+
 @test "get_option - success" {
   local args=("-a" "--beta" "-c" "ccc" "--delta=ddd" "-eeee" "p1" "p2")
   local options=()

@@ -32,10 +32,10 @@ TEST_NUMBER_B=5354
 ```bash
 load_env_file "config.env"
 
-echo "${TEST_STRING_A}"
-echo "${TEST_STRING_B}"
-echo ${TEST_NUMBER_A}
-echo ${TEST_NUMBER_B}
+printf "%s\n" "${TEST_STRING_A}"
+printf "%s\n" "${TEST_STRING_B}"
+printf "%d\n" ${TEST_NUMBER_A}
+printf "%d\n" ${TEST_NUMBER_B}
 ###
 # ABC
 # DEF

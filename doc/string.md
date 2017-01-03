@@ -29,7 +29,7 @@ Examples:
 array=("Hello" "World" "!!!")
 implode_string array[@] " " result
 
-echo "${result}"
+printf "%s\n" "${result}"
 ###
 # Hello World !!!
 ###
@@ -39,7 +39,7 @@ echo "${result}"
 array=("1st line" "2nd line" "3rd line")
 implode_string array[@] $'\n' result
 
-echo "${result}"
+printf "%s\n" "${result}"
 ###
 # 1st line
 # 2nd line
@@ -51,7 +51,7 @@ echo "${result}"
 array=("one" "two" "three")
 implode_string array[@] " and " result
 
-echo "${result}"
+printf "%s\n" "${result}"
 ###
 # one and two and three
 ###
@@ -80,9 +80,9 @@ Examples:
 ```bash
 explode_string "Hello World !!!" " " result
 
-echo "${result[0]}"
-echo "${result[1]}"
-echo "${result[2]}"
+printf "%s\n" "${result[0]}"
+printf "%s\n" "${result[1]}"
+printf "%s\n" "${result[2]}"
 ###
 # Hello
 # World
@@ -93,10 +93,10 @@ echo "${result[2]}"
 ```bash
 explode_string "ABC,DEF GHI|JKL" ", |" result
 
-echo "${result[0]}"
-echo "${result[1]}"
-echo "${result[2]}"
-echo "${result[3]}"
+printf "%s\n" "${result[0]}"
+printf "%s\n" "${result[1]}"
+printf "%s\n" "${result[2]}"
+printf "%s\n" "${result[3]}"
 ###
 # ABC
 # DEF

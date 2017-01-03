@@ -95,7 +95,7 @@ function error_code_func()
     esac
 
     _lbecf_err_msg="${_lbecf_err_msg} (${_lbecf_file_name}:${_lbecf_line_no})"
-    printf "\e[1;3${LIB_BASH_ERROR_FG};4${LIB_BASH_ERROR_BG}m${_lbecf_err_msg}\e[0m\n" 1>&2
+    printf "%s\n" "\e[1;3${LIB_BASH_ERROR_FG};4${LIB_BASH_ERROR_BG}m${_lbecf_err_msg}\e[0m" 1>&2
   fi
 
   return ${_lbecf_error_code}

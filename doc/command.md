@@ -61,11 +61,11 @@ fi
 
 for option in "${options[@]}"; do
   parse_option "${option}" opt data
-  printf "Option:${opt} Data:${data}\n"
+  printf "%s\n" "Option:${opt} Data:${data}"
 done
 
 for param in "${params[@]}"; do
-  printf "Param:${param}\n"
+  printf "%s\n" "Param:${param}"
 done
 ```
 Output:
@@ -99,12 +99,12 @@ function argument()
     local opt=""
     local data=""
     parse_option "${option}" opt data
-    printf "Option:${opt} Data:${data}\n"
+    printf "%s\n" "Option:${opt} Data:${data}"
   done
 
   local param=""
   for param in "${params[@]}"; do
-    printf "Param:${param}\n"
+    printf "%s\n" "Param:${param}"
   done
 
   return 0

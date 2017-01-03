@@ -27,7 +27,15 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result}" "Hello World ! ! !"
 }
 
-@test "implode_string - with newline" {
+@test "implode_string - with newline (array)" {
+  local array=("A\nB" "C\nD" "E\nF")
+  local result
+
+  implode_string array[@] " " result
+  assert_equal "${result}" "$(printf "%b" "A\nB C\nD E\nF")"
+}
+
+@test "implode_string - with newline (separator)" {
   local array=("Hello" "World" "!!!")
   local result
 
@@ -141,6 +149,26 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result[2]}" '"!!!"'
 }
 
+@test "explode_string - with newline (string)" {
+  local result
+
+  explode_string "A\nB C\nD E\nF" " " result
+  assert_equal ${#result[@]} 3
+  assert_equal "${result[0]}" "$(printf "%b" "A\nB")"
+  assert_equal "${result[1]}" "$(printf "%b" "C\nD")"
+  assert_equal "${result[2]}" "$(printf "%b" "E\nF")"
+}
+
+@test "explode_string - with newline (delimiter)" {
+  local result
+
+  explode_string "Hello\nWorld\n!!!" $'\n' result
+  assert_equal ${#result[@]} 3
+  assert_equal "${result[0]}" "Hello"
+  assert_equal "${result[1]}" "World"
+  assert_equal "${result[2]}" "!!!"
+}
+
 @test "explode_string - with delimiter list" {
   local result
 
@@ -206,6 +234,13 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 
   escape_string -e " " -- 'ABC DEF&GHI JKL' result
   assert_equal "${result}" 'ABC\ DEF&GHI\ JKL'
+}
+
+@test "escape_string - string with newline" {
+  local result
+
+  escape_string 'ABC"D\nF\G\nI$JKL' result
+  assert_equal "${result}" "$(printf "%b" 'ABC\"D\nF\\\\G\nI\$JKL')"
 }
 
 @test "escape_string - success" {

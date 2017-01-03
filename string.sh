@@ -63,7 +63,7 @@ function implode_string()
 
   # Subsitute the front of each element in ${_lbis_pop_first_array} with
   # ${_lbis_sep}
-  printf -v "${_lbis_array_out}" "%s" \
+  printf -v "${_lbis_array_out}" "%b" \
     "${_lbis_first_element}${_lbis_pop_first_array[@]/#/$_lbis_sep}"
 
   return 0
@@ -85,7 +85,7 @@ function implode_string()
 ################################################################################
 function explode_string()
 {
-  local _lbes_string="${1}"
+  local _lbes_string="$(printf "%b" "${1}")"
   local _lbes_IFS=${2}
   local _lbes_array_out=${3}
 
@@ -109,7 +109,7 @@ function explode_string()
   # Push all outputs to result array.
   local _lbes_value
   for _lbes_value in "${_lbes_tmp_array_out[@]}"; do
-    _lbes_value="$(printf "%s" "${_lbes_value}" | escape_system)"
+    _lbes_value="$(printf "%b" "${_lbes_value}" | escape_system)"
     eval "${_lbes_array_out}+=(\"${_lbes_value}\")"
   done
 
@@ -173,7 +173,7 @@ function escape_string()
     esac
   done
 
-  _lbes_output="$(printf "%s" "${_lbes_output}" | sed 's/\(['"${_lbes_escape_list}"']\)/\\\1/g')"
+  _lbes_output="$(printf "%b" "${_lbes_output}" | sed 's/\(['"${_lbes_escape_list}"']\)/\\\1/g')"
   eval "${_lbes_escaped_string}=\"\$(printf \"%s\" \"\${_lbes_output}\")\""
 
   return 0

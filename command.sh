@@ -25,7 +25,7 @@
 #!/usr/bin/env bash
 
 pushd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null
-source ".core.sh"
+source '.core.sh'
 popd &> /dev/null
 
 ################################################################################
@@ -66,7 +66,7 @@ function get_option()
   local _lbgo_opt_pattern='[a-zA-Z](?:\[[a-zA-Z][a-zA-Z_]+\])?:?'
   local _lbgo_opt_capture='([a-zA-Z])(?:\[([a-zA-Z][a-zA-Z_]+)\])?(:)?'
 
-  local _lbgo_option_string="$(printf "%s" "${1}" | escape_perl)"
+  local _lbgo_option_string="$(printf '%s' "${1}" | escape_perl)"
   local _lbgo_args=("${!2}")
   local _lbgo_option_out=${3}
   local _lbgo_param_out=${4}
@@ -106,9 +106,9 @@ function get_option()
 
   # Parse the option string.
   local _lbgo_index=1
-  local _lbgo_option=""
+  local _lbgo_option=''
   for _lbgo_option in "${_lbgo_option_strings[@]}"; do
-    _lbgo_option="$(printf "%s" "${_lbgo_option}" | escape_perl)"
+    _lbgo_option="$(printf '%s' "${_lbgo_option}" | escape_perl)"
     local _lbgo_option_seg="$(perl -e '@res = "'"${_lbgo_option}"'" =~ m/'${_lbgo_opt_capture}'/;
                                        $,="\xff";
                                        print @res')"
@@ -121,17 +121,17 @@ function get_option()
   # Parse the arguments.
   while [[ ${#_lbgo_args[@]} -gt 0 ]]; do
     local _lbgo_shift_count=0
-    local _lbgo_option=""
-    local _lbgo_data=""
+    local _lbgo_option=''
+    local _lbgo_data=''
 
     # Handle '--'.
-    if [[ "${_lbgo_args[0]}" == "--" ]]; then
+    if [[ "${_lbgo_args[0]}" == '--' ]]; then
       _lbgo_args=("${_lbgo_args[@]:1}")
       break
     fi
 
     # Escape the argument.
-    local _lbgo_arg="$(printf "%s" "${_lbgo_args[0]}" | escape_perl)"
+    local _lbgo_arg="$(printf '%s' "${_lbgo_args[0]}" | escape_perl)"
 
     local _lbgo_index=0
     for _lbgo_index in $(seq 1 ${_lbgo_option_count}); do
@@ -205,15 +205,15 @@ function get_option()
       _lbgo_args=("${_lbgo_args[@]:${_lbgo_shift_count}}")
 
       # Add option.
-      _lbgo_data="$(printf "%b" "${_lbgo_data}" | escape_system)"
+      _lbgo_data="$(printf '%b' "${_lbgo_data}" | escape_system)"
       eval "${_lbgo_option_out}+=(\"${_lbgo_option}:${_lbgo_data}\")"
     fi
   done
 
   # Store the parameters.
-  local _lbgo_param=""
+  local _lbgo_param=''
   for _lbgo_param in "${_lbgo_args[@]}"; do
-    _lbgo_param="$(printf "%b" "${_lbgo_param}" | escape_system)"
+    _lbgo_param="$(printf '%b' "${_lbgo_param}" | escape_system)"
     eval "${_lbgo_param_out}+=(\"${_lbgo_param}\")"
   done
 
@@ -250,7 +250,7 @@ function parse_option()
     return ${?}
   fi
 
-  eval "${_lbpo_option_out}=\"\$(printf \"%b\" \"\${_lbpo_option_result:0:1}\")\""
-  eval "${_lbpo_data_out}=\"\$(printf \"%b\" \"\${_lbpo_option_result:2}\")\""
+  eval "${_lbpo_option_out}=\"\$(printf '%b' \"\${_lbpo_option_result:0:1}\")\""
+  eval "${_lbpo_data_out}=\"\$(printf '%b' \"\${_lbpo_option_result:2}\")\""
   return 0
 }

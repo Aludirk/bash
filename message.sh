@@ -25,9 +25,9 @@
 #!/usr/bin/env bash
 
 pushd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null
-source ".core.sh"
-source "command.sh"
-source "string.sh"
+source '.core.sh'
+source 'command.sh'
+source 'string.sh'
 popd &> /dev/null
 
 export COLOR_BLACK=0
@@ -63,7 +63,7 @@ function message()
   local _lbm_options=()
   local _lbm_params=()
 
-  get_option "tf:b:n" _lbm_args[@] _lbm_options _lbm_params
+  get_option 'tf:b:n' _lbm_args[@] _lbm_options _lbm_params
   if [[ ${?} -ne 0 ]]; then
     error_code ${LIB_BASH_ERROR_INVALID_OPTION}
     return ${?}
@@ -74,21 +74,21 @@ function message()
     return ${?}
   fi
 
-  local _lbm_is_bright="0"
+  local _lbm_is_bright='0'
   local _lbm_foreground="3${COLOR_BLACK}"
-  local _lbm_background=""
+  local _lbm_background=''
   local _lbm_newline="\n"
-  local _lbm_option=""
+  local _lbm_option=''
   for _lbm_option in "${_lbm_options[@]}"; do
-    local _lbm_opt=""
-    local _lbm_data=""
+    local _lbm_opt=''
+    local _lbm_data=''
 
     parse_option "${_lbm_option}" _lbm_opt _lbm_data
     case "${_lbm_opt}" in
-      t) _lbm_is_bright="1";;
+      t) _lbm_is_bright='1';;
       f) _lbm_foreground="3${_lbm_data}";;
       b) _lbm_background="4${_lbm_data}";;
-      n) _lbm_newline="";;
+      n) _lbm_newline='';;
     esac
   done
 
@@ -105,8 +105,8 @@ function message()
     _lbm_color+=("${_lbm_background}")
   fi
 
-  local _lbm_color_str=""
-  implode_string _lbm_color[@] ";" _lbm_color_str
+  local _lbm_color_str=''
+  implode_string _lbm_color[@] ';' _lbm_color_str
 
   printf "\e[${_lbm_color_str}m%b\e[0m${_lbm_newline}" "${_lbm_params[0]}"
 
@@ -183,7 +183,7 @@ function question()
 {
   local _lbq_question="${1}"
   local _lbq_answer=${2}
-  local _lbq_input=""
+  local _lbq_input=''
 
   if [[ ${#} -lt 1 ]]; then
     error_code ${LIB_BASH_ERROR_INVALID_PARAM}

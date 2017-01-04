@@ -27,8 +27,8 @@ String manipulation.
 
 Examples:
 ```bash
-array=("Hello" "World" "!!!")
-implode_string array[@] " " result
+array=('Hello' 'World' '!!!')
+implode_string array[@] ' ' result
 
 printf "%s\n" "${result}"
 ###
@@ -37,7 +37,7 @@ printf "%s\n" "${result}"
 ```
 
 ```bash
-array=("1st line" "2nd line" "3rd line")
+array=('1st line' '2nd line' '3rd line')
 implode_string array[@] $'\n' result
 
 printf "%s\n" "${result}"
@@ -49,8 +49,8 @@ printf "%s\n" "${result}"
 ```
 
 ```bash
-array=("one" "two" "three")
-implode_string array[@] " and " result
+array=('one' 'two' 'three')
+implode_string array[@] ' and ' result
 
 printf "%s\n" "${result}"
 ###
@@ -79,7 +79,7 @@ printf "%s\n" "${result}"
 
 Examples:
 ```bash
-explode_string "Hello World !!!" " " result
+explode_string 'Hello World !!!' ' ' result
 
 printf "%s\n" "${result[0]}"
 printf "%s\n" "${result[1]}"
@@ -92,7 +92,7 @@ printf "%s\n" "${result[2]}"
 ```
 
 ```bash
-explode_string "ABC,DEF GHI|JKL" ", |" result
+explode_string 'ABC,DEF GHI|JKL' ', |' result
 
 printf "%s\n" "${result[0]}"
 printf "%s\n" "${result[1]}"
@@ -139,7 +139,7 @@ printf "%s\n" "${result}"
 ```
 
 ```bash
-escape_string -e "&," 'ABC"D,F\G&I$JKL' result
+escape_string -e '&,' 'ABC"D,F\G&I$JKL' result
 
 printf "%s\n" "${result}"
 ###

@@ -48,18 +48,18 @@ ${COLOR_WHITE} | White
 
 Examples:
 ```bash
-message -f ${COLOR_CYAN} "1st line"
-message -f ${COLOR_RED} -b ${COLOR_YELLOW} "2nd line"
-message -f ${COLOR_BLACK} -b ${COLOR_MAGENTA} "3rd line"
+message -f ${COLOR_CYAN} '1st line'
+message -f ${COLOR_RED} -b ${COLOR_YELLOW} '2nd line'
+message -f ${COLOR_BLACK} -b ${COLOR_MAGENTA} '3rd line'
 ```
 ![message example 1](res/message1.png)
 
 ```bash
-message -f ${COLOR_CYAN} -n "one "
-message -t -f ${COLOR_CYAN} -n "two "
-message -f ${COLOR_RED} -n "three "
-message -t -f ${COLOR_RED} -b ${COLOR_YELLOW} -n "four "
-message -t -f ${COLOR_GREEN} -n "five"
+message -f ${COLOR_CYAN} -n 'one '
+message -t -f ${COLOR_CYAN} -n 'two '
+message -f ${COLOR_RED} -n 'three '
+message -t -f ${COLOR_RED} -b ${COLOR_YELLOW} -n 'four '
+message -t -f ${COLOR_GREEN} -n 'five'
 ```
 ![message example 2](res/message2.png)
 
@@ -84,7 +84,7 @@ message -t -f ${COLOR_GREEN} -n "five"
 
 Example:
 ```bash
-info "This is some information."
+info 'This is some information.'
 ```
 ![info example](res/info.png)
 
@@ -109,7 +109,7 @@ info "This is some information."
 
 Example:
 ```bash
-error "FATAL ERROR"
+error 'FATAL ERROR'
 ```
 ![error example](res/error.png)
 
@@ -136,7 +136,7 @@ error "FATAL ERROR"
 
 Example:
 ```bash
-question "What is your name? " name
+question 'What is your name? ' name
 printf "%s\n" "${name}"
 ```
 ![question example](res/question.png)

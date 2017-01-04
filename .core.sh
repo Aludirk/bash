@@ -25,7 +25,7 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.5.7
+LIB_BASH_VERSION=0.5.8
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"
@@ -90,13 +90,13 @@ function error_code_func()
   fi
 
   if ${LIB_BASH_DEBUG}; then
-    local _lbecf_err_msg=""
+    local _lbecf_err_msg=''
 
     case ${_lbecf_error_code} in
-      3) _lbecf_err_msg="Invalid parameters.";;
-      4) _lbecf_err_msg="Invalid options.";;
-      5) _lbecf_err_msg="No outputs.";;
-      6) _lbecf_err_msg="File does not exist.";;
+      3) _lbecf_err_msg='Invalid parameters.';;
+      4) _lbecf_err_msg='Invalid options.';;
+      5) _lbecf_err_msg='No outputs.';;
+      6) _lbecf_err_msg='File does not exist.';;
       *) return ${_lbecf_error_code};;
     esac
 

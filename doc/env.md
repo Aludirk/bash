@@ -24,16 +24,16 @@ Example:
 ```
 # config.env
 
-TEST_STRING_A="ABC"
-TEST_STRING_B="DEF"
+TEST_STRING_A='ABC'
+TEST_STRING_B='DEF'
 TEST_NUMBER_A=10
 TEST_NUMBER_B=5354
 ```
 ```bash
-load_env_file "config.env"
+load_env_file 'config.env'
 
-printf "%s\n" "${TEST_STRING_A}"
-printf "%s\n" "${TEST_STRING_B}"
+printf "%s\n" '${TEST_STRING_A}'
+printf "%s\n" '${TEST_STRING_B}'
 printf "%d\n" ${TEST_NUMBER_A}
 printf "%d\n" ${TEST_NUMBER_B}
 ###

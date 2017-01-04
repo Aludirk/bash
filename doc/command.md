@@ -50,10 +50,10 @@ Example 1:
 
 #!/usr/bin/env bash
 
-source "command.sh"
+source 'command.sh'
 
 args=("${@}")
-get_option "ab[beta]c:d[delta]:e:" args[@] options params
+get_option 'ab[beta]c:d[delta]:e:' args[@] options params
 exit_code=${?}
 if [[ ${exit_code} -ne 0 ]]; then
   exit ${exit_code}
@@ -88,21 +88,21 @@ function argument()
 
   local options=()
   local params=()
-  get_option "ab[beta]c:d[delta]:e:" args[@] options params
+  get_option 'ab[beta]c:d[delta]:e:' args[@] options params
   exit_code=${?}
   if [[ ${exit_code} -ne 0 ]]; then
     return ${exit_code}
   fi
 
-  local option=""
+  local option=''
   for option in "${options[@]}"; do
-    local opt=""
-    local data=""
+    local opt=''
+    local data=''
     parse_option "${option}" opt data
     printf "%s\n" "Option:${opt} Data:${data}"
   done
 
-  local param=""
+  local param=''
   for param in "${params[@]}"; do
     printf "%s\n" "Param:${param}"
   done

@@ -25,7 +25,7 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.5.6
+LIB_BASH_VERSION=0.5.7
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"
@@ -117,3 +117,6 @@ alias error_code='error_code_func "${BASH_SOURCE[0]}" ${LINENO}'
 
 # Set alias 'esacpe_system' for esacping the system characters '"\$'
 alias escape_system="sed 's/\\([\"\\\$]\\)/\\\\\\1/g'"
+
+# Set alias 'esacpe_perl' for esacping the special characters '"\$@' for Perl
+alias escape_perl="sed 's/\\([\"\\\$@]\\)/\\\\\\1/g'"

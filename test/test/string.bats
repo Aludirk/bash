@@ -52,11 +52,11 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 }
 
 @test "implode_string - special characters" {
-  local array=('A"B' 'C\D' 'E$F')
+  local array=('A"B' 'C\D' 'E$F' 'G@H' "I\nJ")
   local result
 
   implode_string array[@] "" result
-  assert_equal "${result}" 'A"BC\DE$F'
+  assert_equal "${result}" "$(printf "%b" "A\"BC\\DE\$FG@HI\nJ")"
 }
 
 @test "implode_string - with string" {
@@ -121,22 +121,26 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 @test "explode_string - special characters in string" {
   local result
 
-  explode_string 'A"A B\B C$C' " " result
-  assert_equal ${#result[@]} 3
+  explode_string "A\"A B\\B C\$C D@D E\nE" " " result
+  assert_equal ${#result[@]} 5
   assert_equal "${result[0]}" 'A"A'
   assert_equal "${result[1]}" 'B\B'
   assert_equal "${result[2]}" 'C$C'
+  assert_equal "${result[3]}" 'D@D'
+  assert_equal "${result[4]}" "$(printf "%b" "E\nE")"
 }
 
 @test "explode_string - special characters in delimiter" {
   local result
 
-  explode_string 'Hello"World\!$!' '"\$' result
-  assert_equal ${#result[@]} 4
+  explode_string "Hello\"World\\!\$!@!\n!" $'"\$@\n' result
+  assert_equal ${#result[@]} 6
   assert_equal "${result[0]}" "Hello"
   assert_equal "${result[1]}" "World"
   assert_equal "${result[2]}" "!"
   assert_equal "${result[3]}" "!"
+  assert_equal "${result[4]}" "!"
+  assert_equal "${result[5]}" "!"
 }
 
 @test "explode_string - with double quote" {

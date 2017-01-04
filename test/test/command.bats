@@ -55,15 +55,15 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
 }
 
 @test "get_option - special chcaracters" {
-  local args=("-a" 'ABC"DEF\GHI$JKL' 'JKL$GHI\DEF"ABC')
+  local args=("-a" "ABC\"DEF\\GHI\$JKL@MNO\nPQR" "PQR\nMNO\@JKL\$GHI\\DEF\"ABC")
   local options=()
   local param=()
 
   get_option "a:" args[@] options param
   assert_equal ${#options[@]} 1
-  assert_equal "${options[0]}" 'a:ABC"DEF\GHI$JKL'
+  assert_equal "${options[0]}" "$(printf "%b" "a:ABC\"DEF\\GHI\$JKL@MNO\nPQR")"
   assert_equal ${#param[@]} 1
-  assert_equal "${param[0]}" 'JKL$GHI\DEF"ABC'
+  assert_equal "${param[0]}" "$(printf "%b" "PQR\nMNO\@JKL\$GHI\\DEF\"ABC")"
 }
 
 @test "get_option - success" {
@@ -129,13 +129,13 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
 }
 
 @test "parse_option - special characters" {
-  local option='c:A"B\C$D'
+  local option="c:A\"B\\C\$D@E\nF"
   local opt=""
   local data=""
 
   parse_option "${option}" opt data
   assert_equal "${opt}" "c"
-  assert_equal "${data}" 'A"B\C$D'
+  assert_equal "${data}" "$(printf "%b" "A\"B\\C\$D@E\nF")"
 }
 
 @test "parse_option - success" {

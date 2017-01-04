@@ -53,9 +53,18 @@ teardown() {
     "$(printf "\e[1;37;41m%s\e[0m\n" "File does not exist. (${BASH_SOURCE[0]}:${line_no})")"
 }
 
+@test "error_code_func - internal error" {
+  local line_no=${LINENO}; run error_code_func \
+    ${BASH_SOURCE[0]} ${line_no} ${LIB_BASH_INTERNAL_ERROR}
+
+  assert_failure ${LIB_BASH_INTERNAL_ERROR}
+  assert_output \
+    "$(printf "\e[1;37;41m%s\e[0m\n" "Internal error. (${BASH_SOURCE[0]}:${line_no})")"
+}
+
 @test "error_code_func - unknown error" {
   local error_code=0
-  for error_code in $(seq 1 2; seq 7 255); do
+  for error_code in $(seq 1 2; seq 8 255); do
     run error_code_func ${BASH_SOURCE[0]} ${LINENO} ${error_code}
     assert_failure ${error_code}
     assert_output ""

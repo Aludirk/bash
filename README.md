@@ -1,4 +1,4 @@
-# General library for Bash shell script (0.5.8)
+# General library for Bash shell script (0.5.9)
 
 A collection of handy functions for the shell script writing, it aims for Bash 3+.
 
@@ -57,6 +57,7 @@ Code | Error
 4 | Invalid options.
 5 | No outputs.
 6 | File does not exist.
+7 | Internal error.
 
 ## Version History
 

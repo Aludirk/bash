@@ -25,7 +25,7 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.5.8
+LIB_BASH_VERSION=0.5.9
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"
@@ -66,6 +66,9 @@ LIB_BASH_ERROR_NO_OUTPUT=5
 # File does not exist.
 LIB_BASH_ERROR_FILE_NOT_EXIST=6
 
+# Internal error.
+LIB_BASH_INTERNAL_ERROR=7
+
 ################################################################################
 # Show the error message in 'stderr' for the given error code in DEBUG mode.
 #
@@ -97,6 +100,7 @@ function error_code_func()
       4) _lbecf_err_msg='Invalid options.';;
       5) _lbecf_err_msg='No outputs.';;
       6) _lbecf_err_msg='File does not exist.';;
+      7) _lbecf_err_msg='Internal error.';;
       *) return ${_lbecf_error_code};;
     esac
 

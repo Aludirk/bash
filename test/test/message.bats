@@ -10,9 +10,9 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 }
 
 @test 'message - special characters' {
-  run message 'A"B\C$D'
+  run message "A\"B\\C\$D\nE\n"
 
-  assert_output "$(printf "\e[0;30m%b\e[0m\n" 'A"B\C$D')"
+  assert_output "$(printf "\e[0;30m%b\e[0m\n" "A\"B\\C\$D\nE\n")"
 }
 
 @test 'message - foreground color message' {
@@ -70,9 +70,9 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 }
 
 @test 'info - special characters' {
-  run info 'A"B\C$D'
+  run info "A\"B\\C\$D\nE\n"
 
-  assert_output "$(printf "\e[1;32m%b\e[0m\n" 'A"B\C$D')"
+  assert_output "$(printf "\e[1;32m%b\e[0m\n" "A\"B\\C\$D\nE\n")"
 }
 
 @test 'info - alter color' {
@@ -102,9 +102,9 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 }
 
 @test 'error - special characters' {
-  run error 'A"B\C$D'
+  run error "A\"B\\C\$D\nE\n"
 
-  assert_output "$(printf "\e[1;37;41m%b\e[0m\n" 'A"B\C$D')"
+  assert_output "$(printf "\e[1;37;41m%b\e[0m\n" "A\"B\\C\$D\nE\n")"
 }
 
 @test 'error - alter color' {
@@ -153,10 +153,10 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   local answer
 
   pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  run question 'A"B\C$D' answer < answer.txt
+  run question "A\"B\\C\$D\nE\n" answer < answer.txt
   popd &> /dev/null
 
-  assert_output "$(printf "\e[1;36m%b\e[0m" 'A"B\C$D')"
+  assert_output "$(printf "\e[1;36m%b\e[0m" "A\"B\\C\$D\nE\n")"
 }
 
 @test 'question - special characters (answer)' {

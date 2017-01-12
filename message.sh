@@ -202,6 +202,6 @@ function question()
     return ${?}
   fi
 
-  eval "${_lbq_answer}=\"\$(printf \"%s\\n\" \"\${_lbq_input}\")\""
+  eval "${_lbq_answer}=\"\$(printf '%b' \"\${_lbq_input}\")\""
   return 0
 }

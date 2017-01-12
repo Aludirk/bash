@@ -25,10 +25,16 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.5.9
+LIB_BASH_VERSION=0.5.10
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"
+
+# Save LC_CTYPE.
+LIB_BASH_ORIGINAL_LC_CTYPE="${LC_CTYPE}"
+
+# Save LANG.
+LIB_BASH_ORIGINAL_LANG="${LANG}"
 
 ################################################################################
 # Set up the default library configuration.
@@ -120,7 +126,7 @@ shopt -s expand_aliases
 alias error_code='error_code_func "${BASH_SOURCE[0]}" ${LINENO}'
 
 # Set alias 'esacpe_system' for esacping the system characters '"\$'
-alias escape_system="sed 's/\\([\"\\\$]\\)/\\\\\\1/g'"
+alias escape_system="perl -pe 's/([\"\\\\\\\$])/\\\\\\1/g'"
 
 # Set alias 'esacpe_perl' for esacping the special characters '"\$@' for Perl
-alias escape_perl="sed 's/\\([\"\\\$@]\\)/\\\\\\1/g'"
+alias escape_perl="perl -pe 's/([\"\\\\\\\$\\@])/\\\\\\1/g'"

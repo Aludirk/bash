@@ -11,6 +11,7 @@ The following special characters should be tested:
 * `$`
 * `@`
 * `\n`
+* trailing `\n`
 
 ## Function Success
 

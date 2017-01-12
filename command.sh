@@ -205,16 +205,16 @@ function get_option()
       _lbgo_args=("${_lbgo_args[@]:${_lbgo_shift_count}}")
 
       # Add option.
-      _lbgo_data="$(printf '%b' "${_lbgo_data}" | escape_system)"
-      eval "${_lbgo_option_out}+=(\"${_lbgo_option}:${_lbgo_data}\")"
+      _lbgo_data="$(printf "%b\xff" "${_lbgo_data}" | escape_system)"
+      eval "${_lbgo_option_out}+=(\"${_lbgo_option}:${_lbgo_data%$'\xff'}\")"
     fi
   done
 
   # Store the parameters.
   local _lbgo_param=''
   for _lbgo_param in "${_lbgo_args[@]}"; do
-    _lbgo_param="$(printf '%b' "${_lbgo_param}" | escape_system)"
-    eval "${_lbgo_param_out}+=(\"${_lbgo_param}\")"
+    _lbgo_param="$(printf "%b\xff" "${_lbgo_param}" | escape_system)"
+    eval "${_lbgo_param_out}+=(\"${_lbgo_param%$'\xff'}\")"
   done
 
   return 0
@@ -250,7 +250,10 @@ function parse_option()
     return ${?}
   fi
 
-  eval "${_lbpo_option_out}=\"\$(printf '%b' \"\${_lbpo_option_result:0:1}\")\""
-  eval "${_lbpo_data_out}=\"\$(printf '%b' \"\${_lbpo_option_result:2}\")\""
+  printf -v ${_lbpo_option_out} "%b\xff" "${_lbpo_option_result:0:1}"
+  eval "${_lbpo_option_out}=\"\${${_lbpo_option_out}%\$'\\xff'}\""
+  printf -v ${_lbpo_data_out} "%b\xff" "${_lbpo_option_result:2}"
+  eval "${_lbpo_data_out}=\"\${${_lbpo_data_out}%\$'\\xff'}\""
+
   return 0
 }

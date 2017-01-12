@@ -85,7 +85,7 @@ function implode_string()
 ################################################################################
 function explode_string()
 {
-  local _lbes_string="$(printf '%b' "${1}")"
+  local _lbes_string="$(printf '%b' "${1}" ; printf "\xff")"
   local _lbes_IFS=${2}
   local _lbes_array_out=${3}
 
@@ -109,8 +109,8 @@ function explode_string()
   # Push all outputs to result array.
   local _lbes_value
   for _lbes_value in "${_lbes_tmp_array_out[@]}"; do
-    _lbes_value="$(printf '%b' "${_lbes_value}" | escape_system)"
-    eval "${_lbes_array_out}+=(\"${_lbes_value}\")"
+    _lbes_value=$(printf '%b' "${_lbes_value}" | escape_system)
+    eval "${_lbes_array_out}+=(\"${_lbes_value%$'\xff'}\")"
   done
 
   return 0
@@ -173,8 +173,14 @@ function escape_string()
     esac
   done
 
-  _lbes_output="$(printf '%b' "${_lbes_output}" | sed 's/\(['"${_lbes_escape_list}"']\)/\\\1/g')"
-  eval "${_lbes_escaped_string}=\"\$(printf \"%s\" \"\${_lbes_output}\")\""
+  LC_CTYPE=C
+  LANG=C
+
+  _lbes_output="$(printf "%b\xff" "${_lbes_output}" | sed 's/\(['"${_lbes_escape_list}"']\)/\\\1/g')"
+  eval "${_lbes_escaped_string}=\"\${_lbes_output%\$'\xff'}\""
+
+  LC_CTYPE="${LIB_BASH_ORIGINAL_LC_CTYPE}"
+  LANG="${LIB_BASH_ORIGINAL_LANG}"
 
   return 0
 }

@@ -52,11 +52,13 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 }
 
 @test 'implode_string - special characters' {
-  local array=('A"B' 'C\D' 'E$F' 'G@H' "I\nJ")
+  local array=('A"B' 'C\D' 'E$F' 'G@H' "I\nJ" "K\n")
   local result
+  local expect=''
 
   implode_string array[@] '' result
-  assert_equal "${result}" "$(printf '%b' "A\"BC\\DE\$FG@HI\nJ")"
+  expect="$(printf '%b' "A\"BC\\DE\$FG@HI\nJK\n\xff")"
+  assert_equal "${result}" "${expect%$'\xff'}"
 }
 
 @test 'implode_string - with string' {
@@ -120,14 +122,17 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 
 @test 'explode_string - special characters in string' {
   local result
+  local expect=''
 
-  explode_string "A\"A B\\B C\$C D@D E\nE" ' ' result
-  assert_equal ${#result[@]} 5
+  explode_string "A\"A B\\B C\$C D@D E\nE F\n" ' ' result
+  assert_equal ${#result[@]} 6
   assert_equal "${result[0]}" 'A"A'
   assert_equal "${result[1]}" 'B\B'
   assert_equal "${result[2]}" 'C$C'
   assert_equal "${result[3]}" 'D@D'
   assert_equal "${result[4]}" "$(printf '%b' "E\nE")"
+  expect="$(printf "F\n\xff")"
+  assert_equal "${result[5]}" "${expect%$'\xff'}"
 }
 
 @test 'explode_string - special characters in delimiter' {
@@ -242,9 +247,11 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 
 @test 'escape_string - string with newline' {
   local result
+  local expect
 
-  escape_string 'ABC"D\nF\G\nI$JKL' result
-  assert_equal "${result}" "$(printf '%b' 'ABC\"D\nF\\\\G\nI\$JKL')"
+  escape_string "ABC\"D\nF\\G\nI\$JKL\n" result
+  printf -v expect '%b' "ABC\\\"D\nF\\\\\\\\G\nI\\\$JKL\n"
+  assert_equal "${result}" "${expect}"
 }
 
 @test 'escape_string - success' {

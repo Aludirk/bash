@@ -131,6 +131,11 @@ function info()
 {
   local _lbi_info="${1}"
 
+  if [[ ${#} -ne 1 ]]; then
+    error_code ${LIB_BASH_ERROR_INVALID_PARAM}
+    return ${?}
+  fi
+
   message -t -f ${LIB_BASH_INFO_COLOR} "${_lbi_info}"
   if [[ ${?} -ne 0 ]]; then
     error_code ${LIB_BASH_ERROR_INVALID_PARAM}
@@ -155,6 +160,11 @@ function info()
 function error()
 {
   local _lbe_error="${1}"
+
+  if [[ ${#} -ne 1 ]]; then
+    error_code ${LIB_BASH_ERROR_INVALID_PARAM}
+    return ${?}
+  fi
 
   message -t -f ${LIB_BASH_ERROR_FG} -b ${LIB_BASH_ERROR_BG} "${_lbe_error}" 1>&2
   if [[ ${?} -ne 0 ]]; then

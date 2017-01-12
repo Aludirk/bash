@@ -25,7 +25,7 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.5.10
+LIB_BASH_VERSION=0.5.11
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"
@@ -130,3 +130,6 @@ alias escape_system="perl -pe 's/([\"\\\\\\\$])/\\\\\\1/g'"
 
 # Set alias 'esacpe_perl' for esacping the special characters '"\$@' for Perl
 alias escape_perl="perl -pe 's/([\"\\\\\\\$\\@])/\\\\\\1/g'"
+
+# Set alias 'esacpe_perl_re' for esacping the special characters '\^$@()[]{}' for Perl regular expression
+alias escape_perl_re="perl -pe 's/([\\\\\\\^\\$\\@\\(\\)\\[\\]\\{\\}])/\\\\\\1/g'"

@@ -15,6 +15,12 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   assert_output "$(printf "\e[0;30m%b\e[0m\n" "A\"B\\C\$D\nE\n")"
 }
 
+@test 'message - empty string' {
+  run message ''
+
+  assert_output "$(printf "\e[0;30m\e[0m\n")"
+}
+
 @test 'message - foreground color message' {
   run message -f ${COLOR_BLACK} "Hello\nBye"
 
@@ -75,6 +81,12 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   assert_output "$(printf "\e[1;32m%b\e[0m\n" "A\"B\\C\$D\nE\n")"
 }
 
+@test 'info - empty string' {
+  run info ''
+
+  assert_output "$(printf "\e[1;32m\e[0m\n")"
+}
+
 @test 'info - alter color' {
   export LIB_BASH_INFO_COLOR=${COLOR_WHITE}
   run info 'information'
@@ -105,6 +117,12 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   run error "A\"B\\C\$D\nE\n"
 
   assert_output "$(printf "\e[1;37;41m%b\e[0m\n" "A\"B\\C\$D\nE\n")"
+}
+
+@test 'error - empty string' {
+  run error ''
+
+  assert_output "$(printf "\e[1;37;41m\e[0m\n")"
 }
 
 @test 'error - alter color' {
@@ -167,6 +185,26 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   popd &> /dev/null
 
   assert_equal "${answer}" 'ABC"DEF\GHI$JKL'
+}
+
+@test 'question - empty string (question)' {
+  local answer
+
+  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
+  run question '' answer < answer.txt
+  popd &> /dev/null
+
+  assert_output "$(printf "\e[1;36m\e[0m")"
+}
+
+@test 'question - empty string (answer)' {
+  local answer
+
+  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
+  run question 'Please give me the "answer":' answer < empty_answer.txt
+  popd &> /dev/null
+
+  assert_equal "${answer}" ''
 }
 
 @test 'question - alter color' {

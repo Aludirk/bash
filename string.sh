@@ -85,11 +85,11 @@ function implode_string()
 ################################################################################
 function explode_string()
 {
-  local _lbes_string="$(printf '%b' "${1}" ; printf "\xff")"
-  local _lbes_IFS=${2}
+  local _lbes_string="$(printf "%b\xff" "${1}" | escape_perl)"
+  local _lbes_IFS="$(printf "%b\xff" "${2}" | escape_perl_re)"
   local _lbes_array_out=${3}
 
-  if [[ ${#} -lt 2 ]] || [[ -z "${_lbes_IFS}" ]]; then
+  if [[ ${#} -lt 2 ]]; then
     error_code ${LIB_BASH_ERROR_INVALID_PARAM}
     return ${?}
   fi
@@ -102,14 +102,26 @@ function explode_string()
   # Clean up the result.
   eval "${_lbes_array_out}=()"
 
-  IFS=${_lbes_IFS}
-  local _lbes_tmp_array_out=(${_lbes_string})
+  local _lbes_perl_out=''
+  if [[ "${_lbes_IFS}" == $'\xff' ]]; then
+    _lbes_perl_out="$(perl -e \
+                      'print join("\xfe",
+                                  split(//, "'"${_lbes_string%$'\xff'}"'"))')"
+  else
+    _lbes_perl_out="$(perl -e \
+                      'print join("\xfe",
+                                  split(/['"${_lbes_IFS%$'\xff'}"']/,
+                                        "'"${_lbes_string}"'",
+                                        -1))')"
+  fi
+  IFS=$'\xfe'
+  local _lbes_perl_array=(${_lbes_perl_out})
   IFS="${LIB_BASH_ORIGINAL_IFS}"
 
   # Push all outputs to result array.
   local _lbes_value
-  for _lbes_value in "${_lbes_tmp_array_out[@]}"; do
-    _lbes_value=$(printf '%b' "${_lbes_value}" | escape_system)
+  for _lbes_value in "${_lbes_perl_array[@]}"; do
+    _lbes_value=$(printf '%s' "${_lbes_value}" | escape_system)
     eval "${_lbes_array_out}+=(\"${_lbes_value%$'\xff'}\")"
   done
 
@@ -172,6 +184,11 @@ function escape_string()
       e) _lbes_escape_list="${_lbes_data}";;
     esac
   done
+
+  if [[ -z "${_lbes_escape_list}" ]]; then
+    eval "${_lbes_escaped_string}=\"\${_lbes_output%\$'\xff'}\""
+    return 0
+  fi
 
   LC_CTYPE=C
   LANG=C

@@ -189,6 +189,10 @@ function get_option()
     done
 
     if [[ ${_lbgo_shift_count} -eq 0 ]]; then
+      if [[ -z "${_lbgo_arg}" ]]; then
+        break
+      fi
+
       # Check invalid option.
       local _lbgo_match_short="$(perl -e '"'"${_lbgo_arg}"'" =~ m/^-[a-zA-Z]$/; print $&')"
       local _lbgo_match_long="$(perl -e \

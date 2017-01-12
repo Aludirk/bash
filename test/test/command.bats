@@ -69,6 +69,18 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
   assert_equal "${param[0]}" "${expect%$'\xff'}"
 }
 
+@test 'get_option - empty string' {
+  local args=('-a' '' '')
+  local options=()
+  local param=()
+
+  get_option 'a:' args[@] options param
+  assert_equal ${#options[@]} 1
+  assert_equal "${options[0]}" 'a:'
+  assert_equal ${#param[@]} 1
+  assert_equal "${param[0]}" ''
+}
+
 @test 'get_option - success' {
   local args=('-a' '--beta' '-c' 'ccc' '--delta=ddd' '-eeee' 'p1' 'p2')
   local options=()
@@ -141,6 +153,16 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
   assert_equal "${opt}" 'c'
   expect="$(printf "%b" "A\"B\\C\$D@E\nF\n\xff")"
   assert_equal "${data}" "${expect%$'\xff'}"
+}
+
+@test 'parse_option - empty string' {
+  local option='a:'
+  local opt=''
+  local data=''
+
+  parse_option "${option}" opt data
+  assert_equal "${opt}" 'a'
+  assert_equal "${data}" ''
 }
 
 @test 'parse_option - success' {

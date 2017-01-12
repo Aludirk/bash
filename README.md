@@ -1,4 +1,4 @@
-# General library for Bash shell script (0.5.10)
+# General library for Bash shell script (0.5.11)
 
 A collection of handy functions for the shell script writing, it aims for Bash 3+.
 

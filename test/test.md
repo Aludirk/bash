@@ -12,6 +12,7 @@ The following special characters should be tested:
 * `@`
 * `\n`
 * trailing `\n`
+* `''` (empty string, if it is a valid input)
 
 ## Function Success
 

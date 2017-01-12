@@ -61,6 +61,22 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result}" "${expect%$'\xff'}"
 }
 
+@test 'implode_string - empty array' {
+  local array=()
+  local result
+
+  implode_string array[@] ',' result
+  assert_equal "${result}" ''
+}
+
+@test 'implode_string - empty string' {
+  local array=('' '' '')
+  local result
+
+  implode_string array[@] ',' result
+  assert_equal "${result}" ',,'
+}
+
 @test 'implode_string - with string' {
   local array=('Hello' 'World' '!!!')
   local result
@@ -138,14 +154,39 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 @test 'explode_string - special characters in delimiter' {
   local result
 
-  explode_string "Hello\"World\\!\$!@!\n!" $'"\$@\n' result
-  assert_equal ${#result[@]} 6
+  explode_string "Hello\"World\\!^!\$!@!\n!(!)![!]!{!}!" $'"\^$@()[]{}\n' result
+  assert_equal ${#result[@]} 13
   assert_equal "${result[0]}" 'Hello'
   assert_equal "${result[1]}" 'World'
   assert_equal "${result[2]}" '!'
   assert_equal "${result[3]}" '!'
   assert_equal "${result[4]}" '!'
   assert_equal "${result[5]}" '!'
+  assert_equal "${result[6]}" '!'
+  assert_equal "${result[7]}" '!'
+  assert_equal "${result[8]}" '!'
+  assert_equal "${result[9]}" '!'
+  assert_equal "${result[10]}" '!'
+  assert_equal "${result[11]}" '!'
+  assert_equal "${result[12]}" '!'
+}
+
+@test 'explode_string - empty string (1)' {
+  local result
+
+  explode_string '' ' ' result
+  assert_equal ${#result[@]} 1
+  assert_equal "${result[0]}" ''
+}
+
+@test 'explode_string - empty string (2)' {
+  local result
+
+  explode_string '  ' ' ' result
+  assert_equal ${#result[@]} 3
+  assert_equal "${result[0]}" ''
+  assert_equal "${result[1]}" ''
+  assert_equal "${result[2]}" ''
 }
 
 @test 'explode_string - with double quote' {
@@ -189,6 +230,18 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result[3]}" 'JKL'
 }
 
+@test 'explode_string - empty delimiter' {
+  local result
+
+  explode_string 'HELLO' '' result
+  assert_equal ${#result[@]} 5
+  assert_equal "${result[0]}" 'H'
+  assert_equal "${result[1]}" 'E'
+  assert_equal "${result[2]}" 'L'
+  assert_equal "${result[3]}" 'L'
+  assert_equal "${result[4]}" 'O'
+}
+
 @test 'explode_string - success' {
   local result
 
@@ -206,9 +259,6 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
 
   run explode_string 'ABC DEF GHI'
-  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
-
-  run explode_string 'ABC DEF GHI' ''
   assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
 }
 
@@ -251,6 +301,29 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 
   escape_string "ABC\"D\nF\\G\nI\$JKL\n" result
   printf -v expect '%b' "ABC\\\"D\nF\\\\\\\\G\nI\\\$JKL\n"
+  assert_equal "${result}" "${expect}"
+}
+
+@test 'escape_string - empty string (string)' {
+  local result
+
+  escape_string '' result
+  assert_equal "${result}" ''
+}
+
+@test 'escape_string - empty string (escape) (1)' {
+  local result
+
+  escape_string -e '' '' result
+  assert_equal "${result}" ''
+}
+
+@test 'escape_string - empty string (escape) (2)' {
+  local result
+  local expect
+
+  escape_string -e '' "ABC\n" result
+  printf -v expect "ABC\n"
   assert_equal "${result}" "${expect}"
 }
 

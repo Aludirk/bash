@@ -198,10 +198,10 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 }
 
 @test 'question - empty string (answer)' {
-  local answer
+  local answer='xxx'
 
   pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  run question 'Please give me the "answer":' answer < empty_answer.txt
+  question 'Please give me the "answer":' answer < empty_answer.txt
   popd &> /dev/null
 
   assert_equal "${answer}" ''

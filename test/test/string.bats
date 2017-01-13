@@ -61,12 +61,12 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result}" "${expect%$'\xff'}"
 }
 
-@test 'implode_string - empty array' {
-  local array=()
+@test 'implode_string - empty string' {
+  local array=('' '' '')
   local result
 
   implode_string array[@] ',' result
-  assert_equal "${result}" ''
+  assert_equal "${result}" ',,'
 }
 
 @test 'implode_string - empty string' {
@@ -172,7 +172,7 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 }
 
 @test 'explode_string - empty string (1)' {
-  local result
+  local result='xxx'
 
   explode_string '' ' ' result
   assert_equal ${#result[@]} 1
@@ -180,7 +180,7 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 }
 
 @test 'explode_string - empty string (2)' {
-  local result
+  local result='xxx'
 
   explode_string '  ' ' ' result
   assert_equal ${#result[@]} 3
@@ -305,21 +305,21 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 }
 
 @test 'escape_string - empty string (string)' {
-  local result
+  local result='xxx'
 
   escape_string '' result
   assert_equal "${result}" ''
 }
 
 @test 'escape_string - empty string (escape) (1)' {
-  local result
+  local result='xxx'
 
   escape_string -e '' '' result
   assert_equal "${result}" ''
 }
 
 @test 'escape_string - empty string (escape) (2)' {
-  local result
+  local result='xxx'
   local expect
 
   escape_string -e '' "ABC\n" result

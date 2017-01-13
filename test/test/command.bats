@@ -71,8 +71,8 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
 
 @test 'get_option - empty string' {
   local args=('-a' '' '')
-  local options=()
-  local param=()
+  local options=('xxx')
+  local param=('xxx')
 
   get_option 'a:' args[@] options param
   assert_equal ${#options[@]} 1
@@ -157,8 +157,8 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
 
 @test 'parse_option - empty string' {
   local option='a:'
-  local opt=''
-  local data=''
+  local opt='xxx'
+  local data='xxx'
 
   parse_option "${option}" opt data
   assert_equal "${opt}" 'a'

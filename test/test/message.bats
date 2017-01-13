@@ -21,6 +21,12 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   assert_output "$(printf "\e[0;30m\e[0m\n")"
 }
 
+@test 'message - UTF-8' {
+  run message '你好嗎？'
+
+  assert_output "$(printf "\e[0;30m你好嗎？\e[0m\n")"
+}
+
 @test 'message - foreground color message' {
   run message -f ${COLOR_BLACK} "Hello\nBye"
 
@@ -87,6 +93,12 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   assert_output "$(printf "\e[1;32m\e[0m\n")"
 }
 
+@test 'info - UTF-8' {
+  run info '資訊'
+
+  assert_output "$(printf "\e[1;32m資訊\e[0m\n")"
+}
+
 @test 'info - alter color' {
   export LIB_BASH_INFO_COLOR=${COLOR_WHITE}
   run info 'information'
@@ -123,6 +135,12 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   run error ''
 
   assert_output "$(printf "\e[1;37;41m\e[0m\n")"
+}
+
+@test 'error - UTF-8' {
+  run error '錯誤'
+
+  assert_output "$(printf "\e[1;37;41m錯誤\e[0m\n")"
 }
 
 @test 'error - alter color' {
@@ -205,6 +223,26 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   popd &> /dev/null
 
   assert_equal "${answer}" ''
+}
+
+@test 'question - UTF-8 (question)' {
+  local answer
+
+  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
+  run question '你叫咩名？' answer < answer.txt
+  popd &> /dev/null
+
+  assert_output "$(printf "\e[1;36m你叫咩名？\e[0m")"
+}
+
+@test 'question - UTF-8 (answer)' {
+  local answer
+
+  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
+  question 'Please give me the "answer":' answer < utf8_answer.txt
+  popd &> /dev/null
+
+  assert_equal "${answer}" '海綿寶寶'
 }
 
 @test 'question - alter color' {

@@ -62,11 +62,11 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
 
   get_option 'a:' args[@] options param
   assert_equal ${#options[@]} 1
-  expect="$(printf '%b' "a:ABC\"DEF\\GHI\$JKL@MNO\nPQR\n\xff")"
-  assert_equal "${options[0]}" "${expect%$'\xff'}"
+  expect="$(printf '%b' "a:ABC\"DEF\\GHI\$JKL@MNO\nPQR\n\x1f")"
+  assert_equal "${options[0]}" "${expect%$'\x1f'}"
   assert_equal ${#param[@]} 1
-  expect="$(printf '%b' "PQR\nMNO\@JKL\$GHI\\DEF\"ABC\n\xff")"
-  assert_equal "${param[0]}" "${expect%$'\xff'}"
+  expect="$(printf '%b' "PQR\nMNO\@JKL\$GHI\\DEF\"ABC\n\x1f")"
+  assert_equal "${param[0]}" "${expect%$'\x1f'}"
 }
 
 @test 'get_option - empty string' {
@@ -79,6 +79,18 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
   assert_equal "${options[0]}" 'a:'
   assert_equal ${#param[@]} 1
   assert_equal "${param[0]}" ''
+}
+
+@test 'get_option - UTF-8' {
+  local args=('-a' '一二三' '參數')
+  local options=()
+  local param=()
+
+  get_option 'a:' args[@] options param
+  assert_equal ${#options[@]} 1
+  assert_equal "${options[0]}" 'a:一二三'
+  assert_equal ${#param[@]} 1
+  assert_equal "${param[0]}" '參數'
 }
 
 @test 'get_option - success' {
@@ -151,8 +163,8 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
 
   parse_option "${option}" opt data
   assert_equal "${opt}" 'c'
-  expect="$(printf "%b" "A\"B\\C\$D@E\nF\n\xff")"
-  assert_equal "${data}" "${expect%$'\xff'}"
+  expect="$(printf "%b" "A\"B\\C\$D@E\nF\n\x1f")"
+  assert_equal "${data}" "${expect%$'\x1f'}"
 }
 
 @test 'parse_option - empty string' {
@@ -163,6 +175,15 @@ source "${BATS_TEST_DIRNAME}/../../command.sh"
   parse_option "${option}" opt data
   assert_equal "${opt}" 'a'
   assert_equal "${data}" ''
+}
+
+@test 'parse_option - UTF-8' {
+  local option=''
+  local data=''
+
+  parse_option 'a:一二三' option data
+  assert_equal "${option}" 'a'
+  assert_equal "${data}" '一二三'
 }
 
 @test 'parse_option - success' {

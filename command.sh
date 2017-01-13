@@ -97,9 +97,9 @@ function get_option()
   # Split the option string.
   local _lbgo_option_strings="$(perl -e \
                                 '@res = "'"${_lbgo_option_string}"'" =~ m/'${_lbgo_opt_pattern}'/g;
-                                 $,="\xff";
+                                 $,="\x1e";
                                  print @res')"
-  IFS=$'\xff'
+  IFS=$'\x1e'
   local _lbgo_option_strings=(${_lbgo_option_strings})
   IFS="${LIB_BASH_ORIGINAL_IFS}"
   local _lbgo_option_count=${#_lbgo_option_strings[@]}
@@ -110,9 +110,9 @@ function get_option()
   for _lbgo_option in "${_lbgo_option_strings[@]}"; do
     _lbgo_option="$(printf '%s' "${_lbgo_option}" | escape_perl)"
     local _lbgo_option_seg="$(perl -e '@res = "'"${_lbgo_option}"'" =~ m/'${_lbgo_opt_capture}'/;
-                                       $,="\xff";
+                                       $,="\x1e";
                                        print @res')"
-    IFS=$'\xff'
+    IFS=$'\x1e'
     eval "local _lbgo_option${_lbgo_index}=(\${_lbgo_option_seg})"
     IFS="${LIB_BASH_ORIGINAL_IFS}"
     ((++_lbgo_index))
@@ -209,16 +209,16 @@ function get_option()
       _lbgo_args=("${_lbgo_args[@]:${_lbgo_shift_count}}")
 
       # Add option.
-      _lbgo_data="$(printf "%b\xff" "${_lbgo_data}" | escape_system)"
-      eval "${_lbgo_option_out}+=(\"${_lbgo_option}:${_lbgo_data%$'\xff'}\")"
+      _lbgo_data="$(printf "%b\x1f" "${_lbgo_data}" | escape_system)"
+      eval "${_lbgo_option_out}+=(\"${_lbgo_option}:${_lbgo_data%$'\x1f'}\")"
     fi
   done
 
   # Store the parameters.
   local _lbgo_param=''
   for _lbgo_param in "${_lbgo_args[@]}"; do
-    _lbgo_param="$(printf "%b\xff" "${_lbgo_param}" | escape_system)"
-    eval "${_lbgo_param_out}+=(\"${_lbgo_param%$'\xff'}\")"
+    _lbgo_param="$(printf "%b\x1f" "${_lbgo_param}" | escape_system)"
+    eval "${_lbgo_param_out}+=(\"${_lbgo_param%$'\x1f'}\")"
   done
 
   return 0
@@ -254,10 +254,10 @@ function parse_option()
     return ${?}
   fi
 
-  printf -v ${_lbpo_option_out} "%b\xff" "${_lbpo_option_result:0:1}"
-  eval "${_lbpo_option_out}=\"\${${_lbpo_option_out}%\$'\\xff'}\""
-  printf -v ${_lbpo_data_out} "%b\xff" "${_lbpo_option_result:2}"
-  eval "${_lbpo_data_out}=\"\${${_lbpo_data_out}%\$'\\xff'}\""
+  printf -v ${_lbpo_option_out} "%b\x1f" "${_lbpo_option_result:0:1}"
+  eval "${_lbpo_option_out}=\"\${${_lbpo_option_out}%\$'\x1f'}\""
+  printf -v ${_lbpo_data_out} "%b\x1f" "${_lbpo_option_result:2}"
+  eval "${_lbpo_data_out}=\"\${${_lbpo_data_out}%\$'\x1f'}\""
 
   return 0
 }

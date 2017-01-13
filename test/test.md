@@ -13,6 +13,7 @@ The following special characters should be tested:
 * `\n`
 * trailing `\n`
 * `''` (empty string, if it is a valid input)
+* UTF-8
 
 ## Function Success
 

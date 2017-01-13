@@ -85,8 +85,8 @@ function implode_string()
 ################################################################################
 function explode_string()
 {
-  local _lbes_string="$(printf "%b\xff" "${1}" | escape_perl)"
-  local _lbes_IFS="$(printf "%b\xff" "${2}" | escape_perl_re)"
+  local _lbes_string="$(printf "%b\x1f" "${1}" | escape_perl)"
+  local _lbes_IFS="$(printf "%b\x1f" "${2}" | escape_perl_re)"
   local _lbes_array_out=${3}
 
   if [[ ${#} -lt 2 ]]; then
@@ -103,18 +103,18 @@ function explode_string()
   eval "${_lbes_array_out}=()"
 
   local _lbes_perl_out=''
-  if [[ "${_lbes_IFS}" == $'\xff' ]]; then
-    _lbes_perl_out="$(perl -e \
-                      'print join("\xfe",
-                                  split(//, "'"${_lbes_string%$'\xff'}"'"))')"
+  if [[ "${_lbes_IFS}" == $'\x1f' ]]; then
+    _lbes_perl_out="$(perl -CS -e \
+                      'use utf8; print join("\x1e",
+                                  split(//, "'"${_lbes_string%$'\x1f'}"'"))')"
   else
-    _lbes_perl_out="$(perl -e \
-                      'print join("\xfe",
-                                  split(/['"${_lbes_IFS%$'\xff'}"']/,
+    _lbes_perl_out="$(perl -CS -e \
+                      'use utf8; print join("\x1e",
+                                  split(/['"${_lbes_IFS%$'\x1f'}"']/,
                                         "'"${_lbes_string}"'",
                                         -1))')"
   fi
-  IFS=$'\xfe'
+  IFS=$'\x1e'
   local _lbes_perl_array=(${_lbes_perl_out})
   IFS="${LIB_BASH_ORIGINAL_IFS}"
 
@@ -122,7 +122,7 @@ function explode_string()
   local _lbes_value
   for _lbes_value in "${_lbes_perl_array[@]}"; do
     _lbes_value=$(printf '%s' "${_lbes_value}" | escape_system)
-    eval "${_lbes_array_out}+=(\"${_lbes_value%$'\xff'}\")"
+    eval "${_lbes_array_out}+=(\"${_lbes_value%$'\x1f'}\")"
   done
 
   return 0
@@ -173,7 +173,7 @@ function escape_string()
     _lbes_escaped_string=${_lbes_params[1]}
   fi
 
-  local _lbes_escape_list='"$\'
+  local _lbes_escape_list="$(printf "%b\x1f" '"\$\\\\')"
   local _lbes_option=''
   for _lbes_option in "${_lbes_options[@]}"; do
     local _lbes_opt=''
@@ -181,20 +181,21 @@ function escape_string()
 
     parse_option "${_lbes_option}" _lbes_opt _lbes_data
     case "${_lbes_opt}" in
-      e) _lbes_escape_list="${_lbes_data}";;
+      e) _lbes_escape_list="$(printf "%b\x1f" "${_lbes_data}" | escape_perl_re)";;
     esac
   done
 
-  if [[ -z "${_lbes_escape_list}" ]]; then
-    eval "${_lbes_escaped_string}=\"\${_lbes_output%\$'\xff'}\""
+  if [[ "${_lbes_escape_list}" == $'\x1f' ]]; then
+    eval "${_lbes_escaped_string}=\"\${_lbes_output}\""
     return 0
   fi
 
   LC_CTYPE=C
   LANG=C
 
-  _lbes_output="$(printf "%b\xff" "${_lbes_output}" | sed 's/\(['"${_lbes_escape_list}"']\)/\\\1/g')"
-  eval "${_lbes_escaped_string}=\"\${_lbes_output%\$'\xff'}\""
+  _lbes_output="$(printf "%b\x1f" "${_lbes_output}" | \
+                  perl -CS -pe 'use utf8; s/(['"${_lbes_escape_list%$'\x1f'}"'])/\\\1/g')"
+  eval "${_lbes_escaped_string}=\"\${_lbes_output%\$'\x1f'}\""
 
   LC_CTYPE="${LIB_BASH_ORIGINAL_LC_CTYPE}"
   LANG="${LIB_BASH_ORIGINAL_LANG}"

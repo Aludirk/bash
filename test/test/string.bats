@@ -57,8 +57,8 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   local expect=''
 
   implode_string array[@] '' result
-  expect="$(printf '%b' "A\"BC\\DE\$FG@HI\nJK\n\xff")"
-  assert_equal "${result}" "${expect%$'\xff'}"
+  expect="$(printf '%b' "A\"BC\\DE\$FG@HI\nJK\n\x1f")"
+  assert_equal "${result}" "${expect%$'\x1f'}"
 }
 
 @test 'implode_string - empty string' {
@@ -69,12 +69,12 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result}" ',,'
 }
 
-@test 'implode_string - empty string' {
-  local array=('' '' '')
+@test 'implode_string - UTF-8' {
+  local array=('你' '好' '嗎' '？')
   local result
 
-  implode_string array[@] ',' result
-  assert_equal "${result}" ',,'
+  implode_string array[@] '' result
+  assert_equal "${result}" '你好嗎？'
 }
 
 @test 'implode_string - with string' {
@@ -147,8 +147,8 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result[2]}" 'C$C'
   assert_equal "${result[3]}" 'D@D'
   assert_equal "${result[4]}" "$(printf '%b' "E\nE")"
-  expect="$(printf "F\n\xff")"
-  assert_equal "${result[5]}" "${expect%$'\xff'}"
+  expect="$(printf "F\n\x1f")"
+  assert_equal "${result[5]}" "${expect%$'\x1f'}"
 }
 
 @test 'explode_string - special characters in delimiter' {
@@ -187,6 +187,16 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result[0]}" ''
   assert_equal "${result[1]}" ''
   assert_equal "${result[2]}" ''
+}
+
+@test 'explode_string - UTF-8' {
+  local result
+
+  explode_string '你，好，嗎' '，' result
+  assert_equal ${#result[@]} 3
+  assert_equal "${result[0]}" '你'
+  assert_equal "${result[1]}" '好'
+  assert_equal "${result[2]}" '嗎'
 }
 
 @test 'explode_string - with double quote' {
@@ -325,6 +335,13 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   escape_string -e '' "ABC\n" result
   printf -v expect "ABC\n"
   assert_equal "${result}" "${expect}"
+}
+
+@test 'escape_string - UTF-8' {
+  local result
+
+  escape_string -e '？' '你好嗎？' result
+  assert_equal "${result}" '你好嗎\？'
 }
 
 @test 'escape_string - success' {

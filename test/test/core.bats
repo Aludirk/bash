@@ -64,7 +64,7 @@ teardown() {
 
 @test "error_code_func - unknown error" {
   local error_code=0
-  for error_code in $(seq 1 2; seq 8 255); do
+  for error_code in $(seq 1 64; seq 70 255); do
     run error_code_func ${BASH_SOURCE[0]} ${LINENO} ${error_code}
     assert_failure ${error_code}
     assert_output ""

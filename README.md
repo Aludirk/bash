@@ -1,4 +1,4 @@
-# General library for Bash shell script (0.5.13)
+# General library for Bash shell script (0.5.14)
 
 A collection of handy functions for the shell script writing, it aims for Bash 3+.
 
@@ -53,11 +53,11 @@ All functions may return the following error codes.
 
 Code | Error
 ----- | -----
-3 | Invalid parameters.
-4 | Invalid options.
-5 | No outputs.
-6 | File does not exist.
-7 | Internal error.
+65 | Invalid parameters.
+66 | Invalid options.
+67 | No outputs.
+68 | File does not exist.
+69 | Internal error.
 
 ## Version History
 

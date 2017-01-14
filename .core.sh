@@ -25,7 +25,7 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.5.13
+LIB_BASH_VERSION=0.5.14
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"
@@ -61,19 +61,19 @@ LIB_BASH_QUESTION_COLOR=${LIB_BASH_QUESTION_COLOR:-6}
 ################################################################################
 
 # Invalid parameters.
-LIB_BASH_ERROR_INVALID_PARAM=3
+LIB_BASH_ERROR_INVALID_PARAM=65
 
 # Invalid options.
-LIB_BASH_ERROR_INVALID_OPTION=4
+LIB_BASH_ERROR_INVALID_OPTION=66
 
 # No outputs.
-LIB_BASH_ERROR_NO_OUTPUT=5
+LIB_BASH_ERROR_NO_OUTPUT=67
 
 # File does not exist.
-LIB_BASH_ERROR_FILE_NOT_EXIST=6
+LIB_BASH_ERROR_FILE_NOT_EXIST=68
 
 # Internal error.
-LIB_BASH_INTERNAL_ERROR=7
+LIB_BASH_INTERNAL_ERROR=69
 
 ################################################################################
 # Show the error message in 'stderr' for the given error code in DEBUG mode.
@@ -102,11 +102,11 @@ function error_code_func()
     local _lbecf_err_msg=''
 
     case ${_lbecf_error_code} in
-      3) _lbecf_err_msg='Invalid parameters.';;
-      4) _lbecf_err_msg='Invalid options.';;
-      5) _lbecf_err_msg='No outputs.';;
-      6) _lbecf_err_msg='File does not exist.';;
-      7) _lbecf_err_msg='Internal error.';;
+      65) _lbecf_err_msg='Invalid parameters.';;
+      66) _lbecf_err_msg='Invalid options.';;
+      67) _lbecf_err_msg='No outputs.';;
+      68) _lbecf_err_msg='File does not exist.';;
+      69) _lbecf_err_msg='Internal error.';;
       *) return ${_lbecf_error_code};;
     esac
 

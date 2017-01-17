@@ -62,6 +62,15 @@ Code | Error
 
 ## Version History
 
+### 0.6.0
+* `match_string` for testing string that matches give regular expression.
+* `regex_string` for finding the matched pattern and capture groups.
+* `replace_string` for replacing string with regular expression.
+* Fix wrong output for newline character.
+* Fix wrong output for trailing newline.
+* Fix wrong output for empty string input.
+* Fix wrong output for UTF-8.
+
 ### 0.5.2
 
 * `implode_string` for imploding array to string and `explode_string` for exploding string to array.

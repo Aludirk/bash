@@ -136,7 +136,7 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result[2]}" '!!!'
 }
 
-@test 'explode_string - special characters in string' {
+@test 'explode_string - special characters in string (1)' {
   local result
   local expect=''
 
@@ -149,6 +149,17 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
   assert_equal "${result[4]}" "$(printf '%b' "E\nE")"
   expect="$(printf "F\n\x1f")"
   assert_equal "${result[5]}" "${expect%$'\x1f'}"
+}
+
+@test 'explode_string - special characters in string (2)' {
+  local result
+  local expect
+
+  explode_string "\n \n" ' ' result
+  assert_equal ${#result[@]} 2
+  printf -v expect "\n"
+  assert_equal "${result[0]}" "${expect}"
+  assert_equal "${result[1]}" "${expect}"
 }
 
 @test 'explode_string - special characters in delimiter' {
@@ -370,4 +381,418 @@ source "${BATS_TEST_DIRNAME}/../../string.sh"
 @test 'escape_string - no outputs' {
   run escape_string -e ' ' 'ABC"DEF\GHI$JKL'
   assert_failure ${LIB_BASH_ERROR_NO_OUTPUT}
+}
+
+@test 'match_string - normal' {
+  local is_match
+
+  match_string 'Hello World !!!' '\w+ \w+ !!!' '' is_match
+  assert_equal ${is_match} true
+}
+
+@test 'match_string - special characters (1)' {
+  local is_match
+
+  match_string "A\"B\\C^D\$E@F(G)H[I]J{K}L\nM\n" '.".\\.\^.\$.@.\(.\).\[.\].\{.\}.\s.\s' 's' is_match
+  assert_equal ${is_match} true
+}
+
+@test 'match_string - special characters (2)' {
+  local match
+
+  match_string "\n" '\s' 's' is_match
+  assert_equal ${is_match} true
+}
+
+@test 'match_string - empty string' {
+  local is_match=true
+
+  match_string '' '.+' '' is_match
+  assert_equal ${is_match} false
+}
+
+@test 'match_string - UTF-8' {
+  local is_match
+
+  match_string '你好嗎？' '.{3}？' '' is_match
+  assert_equal ${is_match} true
+}
+
+@test 'match_string - modifier (1)' {
+  local is_match
+
+  match_string "LINE1\nLINE2\nLINE3" 'LINE.+3' 's' is_match
+  assert_equal ${is_match} true
+}
+
+@test 'match_string - modifier (2)' {
+  local is_match=true
+
+  match_string "LINE1\nLINE2\nLINE3" 'LINE.+3' '' is_match
+  assert_equal ${is_match} false
+}
+
+@test 'match_string - match email (1)' {
+  local is_match
+
+  match_string 'example@email.com' '[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+' '' is_match
+  assert_equal ${is_match} true
+}
+
+@test 'match_string - match email (2)' {
+  local is_match=true
+
+  match_string 'example@email' '[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+' '' is_match
+  assert_equal ${is_match} false
+}
+
+@test 'match_string - match whole string only' {
+  local is_match=true
+
+  match_string 'ABC123DEF' '\d+[A-Z]+' '' is_match
+  assert_equal ${is_match} false
+}
+
+@test 'match_string - match with start and end of string should be worked' {
+  local is_match
+
+  match_string 'ABC123DEF' '^[A-Z]+\d+[A-Z]+$' '' is_match
+  assert_equal ${is_match} true
+}
+
+@test 'match_string - invalid parameters' {
+  run match_string
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+
+  run match_string 'Hello World !!!'
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+
+  run match_string 'Hello World !!!' '!!!$'
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+
+  run match_string 'Hello World !!!' '' ''
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+}
+
+@test 'match_string - no outputs' {
+  run match_string 'Hello World !!!' '!!!$' ''
+  assert_failure ${LIB_BASH_ERROR_NO_OUTPUT}
+}
+
+@test 'match_string - invalid regular expression' {
+  local is_match
+
+  run match_string 'Hello World !!!' '(' '' is_match
+  assert_failure ${LIB_BASH_INVALID_REGEX}
+  assert_output ''
+
+  run match_string 'Hello World !!!' '.*' '#' is_match
+  assert_failure ${LIB_BASH_INVALID_REGEX}
+  assert_output ''
+}
+
+@test 'regex_string - normal' {
+  local matched
+  local group
+
+  regex_string 'Hello World !!!' '(W\w+)' '' matched group
+  assert_equal "${matched}" 'World'
+  assert_equal "${#group[@]}" 1
+  assert_equal "${group[0]}" 'World'
+}
+
+@test 'regex_string - special characters (1)' {
+  local matched
+  local group
+  local expect
+
+  regex_string "A\"B\\C^D\$E@F(G)H[I]J{K}L\nM\n" '\W' 'g' matched group
+  printf -v expect "\n"
+  assert_equal "${matched}" "${expect}"
+  assert_equal "${#group[@]}" 13
+  assert_equal "${group[0]}" '"'
+  assert_equal "${group[1]}" '\'
+  assert_equal "${group[2]}" '^'
+  assert_equal "${group[3]}" '$'
+  assert_equal "${group[4]}" '@'
+  assert_equal "${group[5]}" '('
+  assert_equal "${group[6]}" ')'
+  assert_equal "${group[7]}" '['
+  assert_equal "${group[8]}" ']'
+  assert_equal "${group[9]}" '{'
+  assert_equal "${group[10]}" '}'
+  assert_equal "${group[11]}" "${expect}"
+  assert_equal "${group[12]}" "${expect}"
+}
+
+@test 'regex_string - special characters (2)' {
+  local matched
+  local group
+  local expect
+
+  regex_string "\n" '(\s)' 's' matched group
+  printf -v expect "\n"
+  assert_equal "${matched}" "${expect}"
+  assert_equal ${#group[@]} 1
+  assert_equal "${group[0]}" "${expect}"
+}
+
+@test 'regex_string - empty string' {
+  local matched='xxx'
+  local group=('xxx')
+
+  regex_string '' '(.+)' '' matched group
+  assert_equal "${matched}" ''
+  assert_equal ${#group[@]} 0
+}
+
+@test 'regex_string - UTF-8' {
+  local matched
+  local group
+
+  regex_string '你好嗎？' '([^？])' 'g' matched group
+  assert_equal "${matched}" '嗎'
+  assert_equal ${#group[@]} 3
+  assert_equal "${group[0]}" '你'
+  assert_equal "${group[1]}" '好'
+  assert_equal "${group[2]}" '嗎'
+}
+
+@test 'regex_string - match empty' {
+  local matched='xxx'
+  local group
+
+  regex_string 'AB CD' '(?<=\w)(\W*?)(?=\w)' 'g' matched group
+  assert_equal "${matched}" ''
+  assert_equal ${#group[@]} 3
+  assert_equal "${group[0]}" ''
+  assert_equal "${group[1]}" ' '
+  assert_equal "${group[2]}" ''
+}
+
+@test 'regex_string - modifier (1)' {
+  local matched
+  local group
+  local expect
+
+  regex_string "<tag>asdf</tag>\n<tag>jkl;</tag>" '^<tag>(.*)<\/tag>$' 's' matched group
+  printf -v expect "<tag>asdf</tag>\n<tag>jkl;</tag>"
+  assert_equal "${matched}" "${expect}"
+  assert_equal ${#group[@]} 1
+  printf -v expect "asdf</tag>\n<tag>jkl;"
+  assert_equal "${group[0]}" "${expect}"
+}
+
+@test 'regex_string - modifier (2)' {
+  local matched
+  local group
+
+  regex_string "<tag>asdf</tag>\n<tag>jkl;</tag>" '^<tag>(.*)<\/tag>$' 'gm' matched group
+  assert_equal "${matched}" '<tag>jkl;</tag>'
+  assert_equal ${#group[@]} 2
+  assert_equal "${group[0]}" 'asdf'
+  assert_equal "${group[1]}" 'jkl;'
+}
+
+@test 'regex_string - no capture groups' {
+  local matched
+  local group=('xxx')
+
+  regex_string 'ABC123!@#' '\d+' '' matched group
+  assert_equal "${matched}" '123'
+  assert_equal ${#group[@]} 0
+}
+
+@test 'regex_string - match "1" (1)' {
+  local matched
+  local group=('xxx')
+
+  regex_string '1' '\d' '' matched group
+  assert_equal "${matched}" '1'
+  assert_equal ${#group[@]} 0
+}
+
+@test 'regex_string - match "1" (2)' {
+  local matched
+  local group
+
+  regex_string '1' '(\d)' '' matched group
+  assert_equal "${matched}" '1'
+  assert_equal ${#group[@]} 1
+  assert_equal "${group[0]}" '1'
+}
+
+@test 'regex_string - email' {
+  local matched
+  local group
+
+  regex_string "1. test@example.com\n2. test.test@example.com\n3. test_test@example.com.hk" '[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+' 'gm' matched group
+  assert_equal "${matched}" 'test_test@example.com.hk'
+  assert_equal ${#group[@]} 3
+  assert_equal "${group[0]}" 'test@example.com'
+  assert_equal "${group[1]}" 'test.test@example.com'
+  assert_equal "${group[2]}" 'test_test@example.com.hk'
+}
+
+@test 'regex_string - backreference' {
+  local matched
+  local group
+
+  regex_string "abc=abc\nabc=def\ndef=abc\ndef=def" '((abc|def)=\2)' 'gm' matched group
+  assert_equal "${matched}" 'def=def'
+  assert_equal ${#group[@]} 4
+  assert_equal "${group[0]}" 'abc=abc'
+  assert_equal "${group[1]}" 'abc'
+  assert_equal "${group[2]}" 'def=def'
+  assert_equal "${group[3]}" 'def'
+}
+
+@test 'regex_string - success' {
+  local matched
+  local group
+
+  run regex_string 'Hello World !!!' '(W\w+)' '' matched group
+  assert_success
+  assert_output ''
+}
+
+@test 'regex_string - invalid parameters' {
+  run regex_string
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+
+  run regex_string 'Hello World !!!'
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+
+  run regex_string 'Hello World !!!' '.*'
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+
+  run regex_string 'Hello World !!!' '' ''
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+}
+
+@test 'regex_string - no outputs' {
+  local matched
+
+  run regex_string 'Hello World !!!' '.*' ''
+  assert_failure ${LIB_BASH_ERROR_NO_OUTPUT}
+
+  run regex_string 'Hello World !!!' '.*' '' matched
+  assert_failure ${LIB_BASH_ERROR_NO_OUTPUT}
+}
+
+@test 'regex_string - invalid regular expression' {
+  local matched
+  local group
+
+  run regex_string 'Hello World !!!' '(' '' matched group
+  assert_failure ${LIB_BASH_INVALID_REGEX}
+  assert_output ''
+
+  run regex_string 'Hello World !!!' '.*' '#' matched group
+  assert_failure ${LIB_BASH_INVALID_REGEX}
+  assert_output ''
+}
+
+@test 'replace_string - normal' {
+  local replaced
+
+  replace_string 'Hello World !!!' 'H\w+' 'Good Night' '' replaced
+  assert_equal "${replaced}" 'Good Night World !!!'
+}
+
+@test 'replace_string - special characters (1)' {
+  local replaced
+
+  replace_string "A\"B\\C^D\$E@F(G)H[I]J{K}L\nM\n" '\W' '-' 'g' replaced
+  assert_equal "${replaced}" 'A-B-C-D-E-F-G-H-I-J-K-L-M-'
+}
+
+@test 'replace_string - special characters (2)' {
+  local replaced
+  local expect
+
+  replace_string 'A.' '\.' "\"\\\\^\\\$@\n()[]{}\n" 'g' replaced
+  printf -v expect "A\"\\^\$@\n()[]{}\n"
+  assert_equal "${replaced}" "${expect}"
+}
+
+@test 'replace_string - empty string (1)' {
+  local replaced
+
+  replace_string '' '^$' 'HELLO' '' replaced
+  assert_equal "${replaced}" 'HELLO'
+}
+
+@test 'replace_string - empty string (2)' {
+  local replaced='xxx'
+
+  replace_string 'HELLO' '^.*$' '' '' replaced
+  assert_equal "${replaced}" ''
+}
+
+@test 'replace_string - UTF-8' {
+  local replaced
+
+  replace_string '男人' '.(?=人)' '女' 'g' replaced
+  assert_equal "${replaced}" '女人'
+}
+
+@test 'replace_string - modifier' {
+  local replaced
+
+  replace_string "ABC\nDEF\nGHI" "\n" '\$' 'gs' replaced
+  assert_equal "${replaced}" 'ABC$DEF$GHI'
+}
+
+@test 'replace_string - replace config file' {
+  local replaced
+  local CONFIG="$(cat "${BATS_TEST_DIRNAME}/fixture/template.conf"; printf $'\x1f')"
+  local expect
+
+  replace_string "${CONFIG%$'\x1f'}" '<HOST>' '127.0.0.1' 'g' replaced
+  replace_string "${replaced}" '<PASSWORD>' '123456' 'g' replaced
+  printf -v expect "host=127.0.0.1\ndatabase=127.0.0.1\npassword=123456\n\n"
+  assert_equal "${replaced}" "${expect}"
+}
+
+@test 'replace_string - success' {
+  local replaced
+
+  run replace_string 'Hello World !!!' 'H\w+' 'Good Night' '' replaced
+  assert_success
+  assert_output ''
+}
+
+@test 'replace_string - invalid parameters' {
+  run replace_string
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+
+  run replace_string 'Hello World !!!'
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+
+  run replace_string 'Hello World !!!' '.*'
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+
+  run replace_string 'Hello World !!!' '.*' ''
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+
+  run replace_string 'Hello World !!!' '' '' ''
+  assert_failure ${LIB_BASH_ERROR_INVALID_PARAM}
+}
+
+@test 'replace_string - no outputs' {
+  run replace_string 'Hello World !!!' '.*' '' ''
+  assert_failure ${LIB_BASH_ERROR_NO_OUTPUT}
+}
+
+@test 'replace_string - invalid regular expression' {
+  local replaced
+
+  run replace_string 'Hello World !!!' '(' '' '' replaced
+  assert_failure ${LIB_BASH_INVALID_REGEX}
+  assert_output ''
+
+  run replace_string 'Hello World !!!' '.*' '' '@' replaced
+  assert_failure ${LIB_BASH_INVALID_REGEX}
+  assert_output ''
 }

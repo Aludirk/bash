@@ -1,4 +1,4 @@
-# General library for Bash shell script (0.5.14)
+# General library for Bash shell script (0.6.0)
 
 A collection of handy functions for the shell script writing, it aims for Bash 3+.
 
@@ -58,6 +58,7 @@ Code | Error
 67 | No outputs.
 68 | File does not exist.
 69 | Internal error.
+70 | Invalid regular expression.
 
 ## Version History
 

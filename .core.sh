@@ -25,16 +25,10 @@
 #!/usr/bin/env bash
 
 # Version
-LIB_BASH_VERSION=0.5.14
+LIB_BASH_VERSION=0.6.0
 
 # Save the IFS.
 LIB_BASH_ORIGINAL_IFS="${IFS}"
-
-# Save LC_CTYPE.
-LIB_BASH_ORIGINAL_LC_CTYPE="${LC_CTYPE}"
-
-# Save LANG.
-LIB_BASH_ORIGINAL_LANG="${LANG}"
 
 ################################################################################
 # Set up the default library configuration.
@@ -75,6 +69,9 @@ LIB_BASH_ERROR_FILE_NOT_EXIST=68
 # Internal error.
 LIB_BASH_INTERNAL_ERROR=69
 
+# Invalid regular expression.
+LIB_BASH_INVALID_REGEX=70
+
 ################################################################################
 # Show the error message in 'stderr' for the given error code in DEBUG mode.
 #
@@ -107,6 +104,7 @@ function error_code_func()
       67) _lbecf_err_msg='No outputs.';;
       68) _lbecf_err_msg='File does not exist.';;
       69) _lbecf_err_msg='Internal error.';;
+      70) _lbecf_err_msg='Invalid regular expression.';;
       *) return ${_lbecf_error_code};;
     esac
 

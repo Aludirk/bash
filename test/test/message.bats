@@ -168,9 +168,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - normal (output)' {
   local answer
 
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  run question 'Please give me the "answer": ' answer < answer.txt
-  popd &> /dev/null
+  run question 'Please give me the "answer": ' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
 
   assert_output "$(printf "\e[1;36m%b\e[0m" 'Please give me the "answer": ')"
 }
@@ -178,9 +176,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - normal (answer)' {
   local answer
 
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  question 'Please give me the "answer": ' answer < answer.txt
-  popd &> /dev/null
+  question 'Please give me the "answer": ' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
 
   assert_equal "${answer}" 'The answer is "answer"'
 }
@@ -188,9 +184,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - special characters (question)' {
   local answer
 
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  run question "A\"B\\C\$D\nE\n" answer < answer.txt
-  popd &> /dev/null
+  run question "A\"B\\C\$D\nE\n" answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
 
   assert_output "$(printf "\e[1;36m%b\e[0m" "A\"B\\C\$D\nE\n")"
 }
@@ -198,9 +192,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - special characters (answer)' {
   local answer
 
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  question 'Please give me the "answer": ' answer < special_answer.txt
-  popd &> /dev/null
+  question 'Please give me the "answer": ' answer < \
+    "${BATS_TEST_DIRNAME}/fixture/special_answer.txt"
 
   assert_equal "${answer}" 'ABC"DEF\GHI$JKL'
 }
@@ -208,9 +201,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - empty string (question)' {
   local answer
 
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  run question '' answer < answer.txt
-  popd &> /dev/null
+  run question '' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
 
   assert_output "$(printf "\e[1;36m\e[0m")"
 }
@@ -218,9 +209,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - empty string (answer)' {
   local answer='xxx'
 
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  question 'Please give me the "answer":' answer < empty_answer.txt
-  popd &> /dev/null
+  question 'Please give me the "answer":' answer < "${BATS_TEST_DIRNAME}/fixture/empty_answer.txt"
 
   assert_equal "${answer}" ''
 }
@@ -228,9 +217,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - UTF-8 (question)' {
   local answer
 
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  run question '你叫咩名？' answer < answer.txt
-  popd &> /dev/null
+  run question '你叫咩名？' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
 
   assert_output "$(printf "\e[1;36m你叫咩名？\e[0m")"
 }
@@ -238,9 +225,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - UTF-8 (answer)' {
   local answer
 
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  question 'Please give me the "answer":' answer < utf8_answer.txt
-  popd &> /dev/null
+  question 'Please give me the "answer":' answer < "${BATS_TEST_DIRNAME}/fixture/utf8_answer.txt"
 
   assert_equal "${answer}" '海綿寶寶'
 }
@@ -249,9 +234,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   local answer
 
   export LIB_BASH_QUESTION_COLOR=7
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  run question 'Please give me the "answer": ' answer < answer.txt
-  popd &> /dev/null
+  run question 'Please give me the "answer": ' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
 
   assert_output "$(printf "\e[1;37m%b\e[0m" 'Please give me the "answer": ')"
   export LIB_BASH_QUESTION_COLOR=6
@@ -260,9 +243,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - success' {
   local answer
 
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  run question 'Please give me the "answer": ' answer < answer.txt
-  popd &> /dev/null
+  run question 'Please give me the "answer": ' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
 
   assert_success
 }
@@ -274,9 +255,7 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 }
 
 @test 'question - no outputs' {
-  pushd "${BATS_TEST_DIRNAME}/fixture" &> /dev/null
-  run question 'Question' < answer.txt
-  popd &> /dev/null
+  run question 'Question' < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
 
   assert_failure ${LIB_BASH_ERROR_NO_OUTPUT}
 }

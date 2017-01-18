@@ -4,9 +4,7 @@ load "${BATS_TEST_DIRNAME}/../bats-assert/load.bash"
 source "${BATS_TEST_DIRNAME}/../../env.sh"
 
 @test 'load_env_file - normal' {
-  pushd "${BATS_TEST_DIRNAME}" &> /dev/null
-  load_env_file 'fixture/config.env'
-  popd &> /dev/null
+  load_env_file "${BATS_TEST_DIRNAME}/fixture/config.env"
 
   assert_equal "${TEST_STRING_A}" 'ABC'
   assert_equal "${TEST_STRING_B}" 'DEF'
@@ -15,9 +13,7 @@ source "${BATS_TEST_DIRNAME}/../../env.sh"
 }
 
 @test 'load_env_file - success' {
-  pushd "${BATS_TEST_DIRNAME}" &> /dev/null
-  run load_env_file 'fixture/config.env'
-  popd &> /dev/null
+  run load_env_file "${BATS_TEST_DIRNAME}/fixture/config.env"
 
   assert_success
   assert_output ''

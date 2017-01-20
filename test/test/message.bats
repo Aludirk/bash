@@ -3,6 +3,10 @@ load "${BATS_TEST_DIRNAME}/../bats-assert/load.bash"
 
 source "${BATS_TEST_DIRNAME}/../../message.sh"
 
+teardown() {
+  rm -f input.txt
+}
+
 @test 'message - simple default messge' {
   run message 'Hello'
 
@@ -168,7 +172,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - normal (output)' {
   local answer
 
-  run question 'Please give me the "answer": ' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
+  printf "\n" > input.txt
+  run question 'Please give me the "answer": ' answer < input.txt
 
   assert_output "$(printf "\e[1;36m%b\e[0m" 'Please give me the "answer": ')"
 }
@@ -176,7 +181,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - normal (answer)' {
   local answer
 
-  question 'Please give me the "answer": ' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
+  printf "The answer is \"answer\"\n" > input.txt
+  question 'Please give me the "answer": ' answer < input.txt
 
   assert_equal "${answer}" 'The answer is "answer"'
 }
@@ -184,7 +190,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - special characters (question)' {
   local answer
 
-  run question "A\"B\\C\$D\nE\n" answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
+  printf "\n" > input.txt
+  run question "A\"B\\C\$D\nE\n" answer < input.txt
 
   assert_output "$(printf "\e[1;36m%b\e[0m" "A\"B\\C\$D\nE\n")"
 }
@@ -192,8 +199,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - special characters (answer)' {
   local answer
 
-  question 'Please give me the "answer": ' answer < \
-    "${BATS_TEST_DIRNAME}/fixture/special_answer.txt"
+  printf "ABC\"DEF\\GHI\$JKL\n" > input.txt
+  question 'Please give me the "answer": ' answer < input.txt
 
   assert_equal "${answer}" 'ABC"DEF\GHI$JKL'
 }
@@ -201,7 +208,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - empty string (question)' {
   local answer
 
-  run question '' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
+  printf "\n" > input.txt
+  run question '' answer < input.txt
 
   assert_output "$(printf "\e[1;36m\e[0m")"
 }
@@ -209,7 +217,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - empty string (answer)' {
   local answer='xxx'
 
-  question 'Please give me the "answer":' answer < "${BATS_TEST_DIRNAME}/fixture/empty_answer.txt"
+  printf "\n" > input.txt
+  question 'Please give me the "answer":' answer < input.txt
 
   assert_equal "${answer}" ''
 }
@@ -217,7 +226,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - UTF-8 (question)' {
   local answer
 
-  run question '你叫咩名？' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
+  printf "\n" > input.txt
+  run question '你叫咩名？' answer < input.txt
 
   assert_output "$(printf "\e[1;36m你叫咩名？\e[0m")"
 }
@@ -225,7 +235,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - UTF-8 (answer)' {
   local answer
 
-  question 'Please give me the "answer":' answer < "${BATS_TEST_DIRNAME}/fixture/utf8_answer.txt"
+  printf "海綿寶寶\n" > input.txt
+  question 'Please give me the "answer":' answer < input.txt
 
   assert_equal "${answer}" '海綿寶寶'
 }
@@ -234,7 +245,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
   local answer
 
   export LIB_BASH_QUESTION_COLOR=7
-  run question 'Please give me the "answer": ' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
+  printf "\n" > input.txt
+  run question 'Please give me the "answer": ' answer < input.txt
 
   assert_output "$(printf "\e[1;37m%b\e[0m" 'Please give me the "answer": ')"
   export LIB_BASH_QUESTION_COLOR=6
@@ -243,7 +255,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 @test 'question - success' {
   local answer
 
-  run question 'Please give me the "answer": ' answer < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
+  printf "\n" > input.txt
+  run question 'Please give me the "answer": ' answer < input.txt
 
   assert_success
 }
@@ -255,7 +268,8 @@ source "${BATS_TEST_DIRNAME}/../../message.sh"
 }
 
 @test 'question - no outputs' {
-  run question 'Question' < "${BATS_TEST_DIRNAME}/fixture/answer.txt"
+  printf "\n" > input.txt
+  run question 'Question' < input.txt
 
   assert_failure ${LIB_BASH_ERROR_NO_OUTPUT}
 }

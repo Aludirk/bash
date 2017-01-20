@@ -29,7 +29,7 @@ ${COLOR_WHITE} | White
 ################################################################################
 # Print message with color.
 #
-# Usage: message [-t] [-f color] [-b color] message
+# Usage: message [-t] [-f color] [-b color] <message>
 #
 # Options:
 #   -t       Bright text.

@@ -215,3 +215,125 @@ function question()
   eval "${_lbq_answer}=\"\$(printf '%b' \"\${_lbq_input}\")\""
   return 0
 }
+
+################################################################################
+# Ask to choose an option.
+#
+# Usage: select_option [-o|--option] <info> <options> <option_out>
+#
+# Options:
+#   -o|--option Return the content of the selected option instead of index.
+#
+# Parameters:
+#   info       [in]  The information to show before the option selection.
+#   options    [in]  The array of options to select, it must at least contains
+#                    two options.
+#   option_out [out] The index of selected option, or the content of the
+#                    selected option if -o|--option is specified.
+#
+# Returns:
+#   ${LIB_BASH_ERROR_INVALID_PARAM}
+#   ${LIB_BASH_ERROR_INVALID_OPTION}
+#   ${LIB_BASH_ERROR_NO_OUTPUT}
+#   ${LIB_BASH_INTERNAL_ERROR}
+################################################################################
+function select_option()
+{
+  local _lbso_args=("${@}")
+  local _lbso_options=()
+  local _lbso_params=()
+
+  get_option 'o[option]' _lbso_args[@] _lbso_options _lbso_params
+  if [[ ${?} -ne 0 ]]; then
+    error_code ${LIB_BASH_ERROR_INVALID_OPTION}
+    return ${?}
+  fi
+
+  local _lbso_output_index=true
+  local _lbso_option=''
+  for _lbso_option in "${_lbso_options[@]}"; do
+    local _lbso_opt=''
+    local _lbso_data=''
+
+    parse_option "${_lbso_option}" _lbso_opt _lbso_data
+    case "${_lbso_opt}" in
+      o) _lbso_output_index=false;;
+    esac
+  done
+
+  local _lbso_info=''
+  local _lbso_option_arr=()
+  if [[ ${#_lbso_params[@]} -lt 2 ]]; then
+    error_code ${LIB_BASH_ERROR_INVALID_PARAM}
+    return ${?}
+  else
+    _lbso_info="${_lbso_params[0]}"
+    eval "_lbso_option_arr=(\"\${${_lbso_params[1]}}\")"
+
+    if [[ ${#_lbso_option_arr[@]} -lt 2 ]]; then
+      error_code ${LIB_BASH_ERROR_INVALID_PARAM}
+      return ${?}
+    fi
+  fi
+
+  local _lbso_option_out
+  if [[ ${#_lbso_params[@]} -lt 3 ]] || [[ -z "${_lbso_params[2]}" ]]; then
+    error_code ${LIB_BASH_ERROR_NO_OUTPUT}
+    return ${?}
+  else
+    _lbso_option_out=${_lbso_params[2]}
+  fi
+
+  # Show the message for asking options.
+  if [[ -n "${_lbso_info}" ]]; then
+    info "${_lbso_info}"
+    if [[ ${?} -ne 0 ]]; then
+      error_code ${LIB_BASH_INTERNAL_ERROR}
+      return ${?}
+    fi
+  fi
+
+  # Show the options.
+  local _lbso_index=0
+  local _lbso_option_max="${#_lbso_option_arr[@]}"
+  local _lbso_option_str_len="${#_lbso_option_max}"
+  for _lbso_index in "${!_lbso_option_arr[@]}"; do
+    printf \
+      "  %*s) %b\n" \
+      ${_lbso_option_str_len} "$[_lbso_index + 1]" "${_lbso_option_arr[${_lbso_index}]}"
+  done
+  printf "\n"
+
+  # Construct the prompt.
+  local _lbso_prompt="$(printf '1-%d ? ' ${#_lbso_option_arr[@]})"
+
+  # Read the option selected.
+  local _lbso_option_read
+  until  [[ -n "${_lbso_option_read}" ]]; do
+    local _lbso_input=''
+
+    question "\e[1A\e[2K${_lbso_prompt}" _lbso_input
+    if [[ ${?} -ne 0 ]]; then
+      error_code ${LIB_BASH_INTERNAL_ERROR}
+      return ${?}
+    fi
+
+    local is_number=false
+    match_string "${_lbso_input}" '\d+' '' is_number
+    if [[ ${is_number} == true ]] \
+    && [[ ${_lbso_input} -ge 1 ]] \
+    && [[ ${_lbso_input} -le ${#_lbso_option_arr[@]} ]]; then
+      _lbso_option_read=$[_lbso_input - 1]
+    fi
+  done
+
+  if [[ ${_lbso_output_index} == true ]]; then
+    eval "${_lbso_option_out}=${_lbso_option_read}"
+  else
+    _lbso_option_read="$(printf '%b\x1f' "${_lbso_option_arr[${_lbso_option_read}]}" | \
+      escape_system)"
+    eval "${_lbso_option_out}=\"${_lbso_option_read%$'\x1f'}\""
+  fi
+
+  return 0
+}

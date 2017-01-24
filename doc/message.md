@@ -7,6 +7,7 @@ Show color message in shell.
 * [info](#info)
 * [error](#error)
 * [question](#question)
+* [select_option](#select_option)
 
 ## Constants
 
@@ -140,3 +141,44 @@ question 'What is your name? ' name
 printf "%s\n" "${name}"
 ```
 ![question example](res/question.png)
+
+## select_option
+
+```
+################################################################################
+# Ask to choose an option.
+#
+# Usage: select_option [-o|--option] <info> <options> <option_out>
+#
+# Options:
+#   -o|--option Return the content of the selected option instead of index.
+#
+# Parameters:
+#   info       [in]  The information to show before the option selection.
+#   options    [in]  The array of options to select, it must at least contains
+#                    two options.
+#   option_out [out] The index of selected option, or the content of the
+#                    selected option if -o|--option is specified.
+#
+# Returns:
+#   ${LIB_BASH_ERROR_INVALID_PARAM}
+#   ${LIB_BASH_ERROR_INVALID_OPTION}
+#   ${LIB_BASH_ERROR_NO_OUTPUT}
+#   ${LIB_BASH_INTERNAL_ERROR}
+################################################################################
+```
+
+Examples:
+```bash
+options=('I' 'II' 'III' 'IV' 'V' 'VI' 'VII' 'VIII' 'IX' 'X' 'XI' 'XII')
+select_option 'Please choose:' options[@] option
+printf "%d\n" ${option}
+```
+![select_option_example_1](res/select_option1.png)
+
+```bash
+options=('I' 'II' 'III' 'IV' 'V' 'VI' 'VII' 'VIII' 'IX' 'X' 'XI' 'XII')
+select_option -o 'Please choose:' options[@] option
+printf "%s\n" "${option}"
+```
+![select_option_example_2](res/select_option2.png)

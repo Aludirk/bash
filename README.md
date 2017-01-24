@@ -62,6 +62,9 @@ Code | Error
 
 ## Version History
 
+### 0.7.0
+* `select_option` to let user to choose option from given array.
+
 ### 0.6.0
 * `match_string` for testing string that matches give regular expression.
 * `regex_string` for finding the matched pattern and capture groups.

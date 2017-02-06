@@ -65,6 +65,10 @@ Code | Error
 
 ## Version History
 
+### 0.9.0
+* `local_ip` for getting the IPv4 IP from command `ifconfig`
+* Dictionary for Bash 3.x and up.
+
 ### 0.7.0
 * `select_option` to let user to choose option from given array.
 

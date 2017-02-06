@@ -1,4 +1,4 @@
-# General library for Bash shell script (0.8.0)
+# General library for Bash shell script (0.9.0)
 
 A collection of handy functions for the shell script writing, it aims for Bash 3+.
 
@@ -26,6 +26,7 @@ Module | File | Description
 [Dictionary](doc/dictionary.md) | [dictionary.sh](dictionary.sh) | Bash dictionary.
 [Environment File](doc/env.md) | [env.sh](env.sh) | Environment file reader.
 [Message](doc/message.md) | [message.sh](message.sh) | Show color message in shell.
+[Network](doc/network.md) | [network.sh](network.sh) | Network utility.
 [String](doc/string.md) | [string.sh](string.sh) | String manipulation.
 
 ## Configuration
@@ -60,6 +61,7 @@ Code | Error
 68 | File does not exist.
 69 | Internal error.
 70 | Invalid regular expression.
+71 | Command not found.
 
 ## Version History
 

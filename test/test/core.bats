@@ -71,9 +71,18 @@ teardown() {
     "$(printf "\e[1;37;41m%s\e[0m\n" "Invalid regular expression. (${BASH_SOURCE[0]}:${line_no})")"
 }
 
+@test "error_code_func - command not found" {
+  local line_no=${LINENO}; run error_code_func \
+    ${BASH_SOURCE[0]} ${line_no} ${LIB_BASH_COMMAND_NOT_FOUND}
+
+  assert_failure ${LIB_BASH_COMMAND_NOT_FOUND}
+  assert_output \
+    "$(printf "\e[1;37;41m%s\e[0m\n" "Command not found. (${BASH_SOURCE[0]}:${line_no})")"
+}
+
 @test "error_code_func - unknown error" {
   local error_code=0
-  for error_code in $(seq 1 64; seq 71 255); do
+  for error_code in $(seq 1 64; seq 72 255); do
     run error_code_func ${BASH_SOURCE[0]} ${LINENO} ${error_code}
     assert_failure ${error_code}
     assert_output ""
